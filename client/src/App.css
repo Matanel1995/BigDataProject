@@ -1,0 +1,16 @@
+.App {
+  text-align: center;
+  align-items: center;
+}
+
+main.h1{
+  color: #000;
+  font-weight: bold;
+  align-items: center;
+}
+
+test.h1{
+  color: #d71313;
+  font-weight: bold;
+  align-items: center;
+}
