@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+
 const { Kafka } = require('kafkajs')
 
 
@@ -12,13 +13,17 @@ const kafka = new Kafka({
     password: '407951382fad4af1a5f770522f35f36e',
   },
   ssl: true,
-})
-console.log("before");
-app.get('/', async (req, res) => {
-    console.log("test")
-
 });
+
+console.log("before");
+
+app.get('/', async (req, res) => {
+  console.log("test");
+  res.send("working A??A?A?A?A?A?");
+});
+
 console.log("after"); 
+
 const producer = kafka.producer()
 producer.connect()
 // ...
@@ -29,7 +34,7 @@ consumer.connect()
 // ...
 consumer.disconnect()
 
-const port = 6000;
+const port = 5000;
 app.listen(port, () => {
   console.log(`Kafka Server is running on port ${port}`);
 });
