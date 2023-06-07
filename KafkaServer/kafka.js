@@ -44,6 +44,30 @@ async function sendMessage(msg) {
   });
 
   await producer.disconnect();
+
+  // take the message to Elastic Search
+  const consumer = kafka.consumer({ groupId: 'a' })
+  consumer.connect()
+  console.log('Consumer connected');
+  await consumer.subscribe({ topic: 'telescopes', fromBeginning: true });
+  console.log('Consumer subscribed to topic: telescopes');
+
+  await consumer.run({
+    eachMessage: async ({ topic, partition, message }) => {
+      try {
+        const key = message.key.toString();
+        const value = message.value.toString();
+        console.log(`Received message: Topic: ${topic}, Partition: ${partition}, Key: ${key}, Value: ${value}`);
+        // Process the received message
+      } catch (error) {
+        console.error('Error processing message:', error);
+      }
+    }
+  });
+
+  await new Promise((resolve) => setTimeout(resolve, 5000));  
+
+  consumer.disconnect()
 }
 
 const port = 5000;
