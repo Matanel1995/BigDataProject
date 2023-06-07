@@ -1,38 +1,50 @@
 const express = require('express');
+const bodyParser = require('body-parser');
 const app = express();
 
-const { Kafka } = require('kafkajs')
-
-
+const { Kafka } = require('kafkajs');
 
 const kafka = new Kafka({
   brokers: ['notable-rodent-11753-eu1-kafka.upstash.io:9092'],
   sasl: {
     mechanism: 'scram-sha-256',
-    username: 'bm90YWJsZS1yb2RlbnQtMTE3NTMkQ_ab1LsDLmBHIVjX62e8LfS1YJACIPcE_kM',
-    password: '407951382fad4af1a5f770522f35f36e',
+    username: 'Zmlyc3Qta2l3aS0xNDA0MyRLVlINL6jEXo3YZ-tDCsaQoH6CfRblLboZblplmO0',
+    password: 'c7671703ebf64fb6893b768467f5d40c',
   },
   ssl: true,
 });
 
-console.log("before");
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
-app.get('/', async (req, res) => {
-  console.log("test");
-  res.send("working A??A?A?A?A?A?");
+app.post('/', async (req) => {
+  try {
+    let msg = req.body
+    await sendMessage(msg);
+  } catch (error) {
+    console.error('Error sending message:', error);
+    res.status(500).send("Error sending message.");
+  }
 });
 
-console.log("after"); 
 
-const producer = kafka.producer()
-producer.connect()
-// ...
-producer.disconnect()
- 
-const consumer = kafka.consumer({ groupId: '$GROUP_NAME' })
-consumer.connect()
-// ...
-consumer.disconnect()
+async function sendMessage(msg) {
+  const producer = kafka.producer();
+  await producer.connect();
+  const topic = 'telescopes';
+  const timestamp = Date.now().toString();
+  const message = {
+    key: timestamp,
+    value: JSON.stringify(msg),
+  };
+
+  await producer.send({
+    topic,
+    messages: [message],
+  });
+
+  await producer.disconnect();
+}
 
 const port = 5000;
 app.listen(port, () => {

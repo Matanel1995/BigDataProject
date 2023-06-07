@@ -5,19 +5,33 @@ const app = express();
 const cheerio = require('cheerio');
 const telescopeData = require('./public/telescopeData');
 console.log(telescopeData);
-// Endpoint to generate the simulated data
-app.get('/generate-data', async (req, res) => {
-  try {
-    const simulatedData = generateSimulatedData();
-    console.log(simulatedData);
-    res.json(simulatedData);
+
+// // Endpoint to generate the simulated data
+// app.get('/generate-data', async (req, res) => {
+//   try {
+//     const simulatedData = generateSimulatedData();
+//     console.log(simulatedData);
+//     res.json(simulatedData);
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ error: 'Internal Server Error' });
+//   }
+// });
+
+
+async function sendToKafka(){
+const simulatedData = generateSimulatedData();
+try {
+  const res = await fetch("http://localhost:5000/", {
+    method: "POST", 
+    headers: { Accept: "application/json" , "Content-Type": "application/json"},
+    body: JSON.stringify(simulatedData)});
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    console.log("im error ", error);
   }
-});
+}
 
-
+setInterval(sendToKafka, 30000);
 
 function calculateDecRA(place, time) {
   // Get the latitude and longitude of the place (assuming place is in the format "City, Country")
