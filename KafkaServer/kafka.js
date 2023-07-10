@@ -55,8 +55,20 @@ async function sendMessage(msg) {
   await consumer.run({
     eachMessage: async ({ topic, partition, message }) => {
       try {
-        const key = message.key.toString();
-        const value = message.value.toString();
+        console.log("I GOT HERE");
+        let key = message.key.toString();
+        let value = message.value.toString();
+        console.log("I GOT HERE2");
+        let currMsg = {
+          key: key,
+          value: value
+        };
+        console.log("I GOT HERE3");
+        const res = await fetch("http://localhost:8000/ElasticPart", {
+        method: "POST", 
+        headers: { Accept: "application/json" , "Content-Type": "application/json"},
+        body: JSON.stringify(currMsg)});
+        console.log("I GOT HERE4");
         console.log(`Received message: Topic: ${topic}, Partition: ${partition}, Key: ${key}, Value: ${value}`);
         // Process the received message
       } catch (error) {
