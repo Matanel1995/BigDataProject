@@ -1,30 +1,26 @@
 const express = require('express');
+const bodyParser = require('body-parser');
 const app = express();
 
-const { Kafka } = require('kafkajs')
-
+const { Kafka } = require('kafkajs');
 
 const kafka = new Kafka({
   brokers: ['notable-rodent-11753-eu1-kafka.upstash.io:9092'],
   sasl: {
     mechanism: 'scram-sha-256',
-    username: 'bm90YWJsZS1yb2RlbnQtMTE3NTMkQ_ab1LsDLmBHIVjX62e8LfS1YJACIPcE_kM',
-    password: '407951382fad4af1a5f770522f35f36e',
+    username: 'Zmlyc3Qta2l3aS0xNDA0MyRLVlINL6jEXo3YZ-tDCsaQoH6CfRblLboZblplmO0',
+    password: 'c7671703ebf64fb6893b768467f5d40c',
   },
   ssl: true,
 });
 
-app.get('/', async (req, res) => {
-  try {
-    const receivedData = req.query.msg;
-    console.log("b")
-    console.log(receivedData)
-    // let good_msg = JSON.stringify(msg)
-    await sendMessage(msg);
-    console.log("c")
-    res.send("Message sent successfully.");
-    console.log("d")
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
+app.post('/', async (req) => {
+  try {
+    let msg = req.body
+    await sendMessage(msg);
   } catch (error) {
     console.error('Error sending message:', error);
     res.status(500).send("Error sending message.");
@@ -33,13 +29,9 @@ app.get('/', async (req, res) => {
 
 
 async function sendMessage(msg) {
-  console.log("in SENDMESSAGE");
   const producer = kafka.producer();
-
   await producer.connect();
-
   const topic = 'telescopes';
-  const response = msg;
   const timestamp = Date.now().toString();
   const message = {
     key: timestamp,
@@ -52,6 +44,42 @@ async function sendMessage(msg) {
   });
 
   await producer.disconnect();
+
+  // take the message to Elastic Search
+  const consumer = kafka.consumer({ groupId: 'a' })
+  consumer.connect()
+  console.log('Consumer connected');
+  await consumer.subscribe({ topic: 'telescopes', fromBeginning: true });
+  console.log('Consumer subscribed to topic: telescopes');
+
+  await consumer.run({
+    eachMessage: async ({ topic, partition, message }) => {
+      try {
+        console.log("I GOT HERE");
+        let key = message.key.toString();
+        let value = message.value.toString();
+        console.log("I GOT HERE2");
+        let currMsg = {
+          key: key,
+          value: value
+        };
+        console.log("I GOT HERE3");
+        const res = await fetch("http://localhost:8000/ElasticPart", {
+        method: "POST", 
+        headers: { Accept: "application/json" , "Content-Type": "application/json"},
+        body: JSON.stringify(currMsg)});
+        console.log("I GOT HERE4");
+        console.log(`Received message: Topic: ${topic}, Partition: ${partition}, Key: ${key}, Value: ${value}`);
+        // Process the received message
+      } catch (error) {
+        console.error('Error processing message:', error);
+      }
+    }
+  });
+
+  await new Promise((resolve) => setTimeout(resolve, 5000));  
+
+  consumer.disconnect()
 }
 
 const port = 5000;

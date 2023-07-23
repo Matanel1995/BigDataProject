@@ -14,7 +14,6 @@ const client = new Redis("rediss://default:37451a4fb8804b3ca6ef5b829b416f6b@orie
 
 
 
-
 // Fetch data from NasaAPI and store in Redis
 // get link : http://localhost:5000/get?start_date={YYYY-MM-DD}&end_date={YYYY-MM-DD}
 app.get('/get', async (req, res) => {
