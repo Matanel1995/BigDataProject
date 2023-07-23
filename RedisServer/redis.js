@@ -3,6 +3,9 @@ const express = require('express');
 
 const app = express();
 require('dotenv').config();
+const fs = require('fs');
+const jsonFilePath = './BSC.json';
+const BrightStar = require('../RedisServer/BrightStar');
 
 
 const  {Redis}  =  require("ioredis");
@@ -11,6 +14,14 @@ const  {Redis}  =  require("ioredis");
 const client = new Redis("rediss://default:37451a4fb8804b3ca6ef5b829b416f6b@oriented-falcon-35428.upstash.io:35428");
 
 
+//Sending randomkey for simalutor to make the dec,ra
+app.get('/getRandomKey',async (req,res)=>{
+  const ress = await client.set('hello','shalom')
+  console.log(ress);
+  // const randomKeys =  "23:09:26.80,-21:10:21.00"
+  if (false){
+    res.send('dsa');
+}})
 
 
 
@@ -61,6 +72,7 @@ async function getRedis(key){
   return data;
 }
 
+
 async function setRedis(key, value){
   console.log("IN SET REDIS FUNCTION");
   //Function to set data to redis
@@ -76,6 +88,23 @@ app.listen(port, () => {
   console.log(`Redis Server is running on port ${port}`);
 });
 
+
+
+// var str = fs.readFileSync(jsonFilePath);
+// var jstr = JSON.parse(str);
+// console.log(jstr.length)
+// for( let i =0; i<2;i++){
+//   const new_Star = new BrightStar(jstr[i]['harvard_ref_#'],jstr[i].RA,jstr[i].DEC,jstr[i]['RA PM'],jstr[i]['DEC PM'],jstr[i].MAG,jstr[i]['Title HD']);
+//   const key = new_Star.RA+","+new_Star.RA
+//   const value = {harvard_ref:new_Star.harvard_ref,
+//                 RA: new_Star.RA,
+//                 RA_PM:new_Star.RA_PM,
+//                 DEC: new_Star.DEC,
+//                 DEC_PM: new_Star.DEC_PM,
+//                 MAG: new_Star.MAG,
+//                 TITLE: new_Star.Title_HD};
+// // setRedis('t','s');
+// }
 // // console.log("test");
 // getRedis('2023-05-20 2023-05-21').then((data)=>{console.log(JSON.stringify(data.result))});
 // // setRedis('test','s');

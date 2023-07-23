@@ -1,7 +1,6 @@
 const express = require('express');
-const bodyParser = require('body-parser');
 const app = express();
-
+app.use(express.json());
 const { Kafka } = require('kafkajs');
 
 const kafka = new Kafka({
@@ -14,12 +13,9 @@ const kafka = new Kafka({
   ssl: true,
 });
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-
-app.post('/', async (req) => {
+app.post('/', async (req,res) => {
   try {
-    let msg = req.body
+    let msg = req.body;
     await sendMessage(msg);
   } catch (error) {
     console.error('Error sending message:', error);
@@ -27,13 +23,12 @@ app.post('/', async (req) => {
   }
 });
 
-
 async function sendMessage(msg) {
   const producer = kafka.producer();
   await producer.connect();
   const topic = 'telescopes';
-  const timestamp = Date.now().toString();
-  const message = {
+  let timestamp = Date.now().toString();
+  let message = {
     key: timestamp,
     value: JSON.stringify(msg),
   };
@@ -52,34 +47,80 @@ async function sendMessage(msg) {
   await consumer.subscribe({ topic: 'telescopes', fromBeginning: true });
   console.log('Consumer subscribed to topic: telescopes');
 
-  await consumer.run({
-    eachMessage: async ({ topic, partition, message }) => {
-      try {
-        console.log("I GOT HERE");
-        let key = message.key.toString();
-        let value = message.value.toString();
-        console.log("I GOT HERE2");
+  const msgPromise = new Promise(async(resolve, reject) => {
+    await consumer.run({
+      eachMessage: async ({ topic, partition, message }) => {
+        // console.log('TOPIC ' , topic);
+        // console.log('PARTITION ',partition);
+        // console.log('MESSAGE' , message.key.toString() , message.value.toString());
         let currMsg = {
-          key: key,
-          value: value
+          key : message.key.toString(),
+          value : message.value.toString()
         };
-        console.log("I GOT HERE3");
-        const res = await fetch("http://localhost:8000/ElasticPart", {
-        method: "POST", 
-        headers: { Accept: "application/json" , "Content-Type": "application/json"},
-        body: JSON.stringify(currMsg)});
-        console.log("I GOT HERE4");
-        console.log(`Received message: Topic: ${topic}, Partition: ${partition}, Key: ${key}, Value: ${value}`);
-        // Process the received message
-      } catch (error) {
-        console.error('Error processing message:', error);
+        resolve(currMsg);
+        // const res = await fetch("http://localhost:8000/ElasticPart", {
+        //   method: "POST", 
+        //   headers: { Accept: "application/json" , "Content-Type": "application/json"},
+        //   body: JSON.stringify(currMsg)}).then(s => {
+        //     consumer.commitOffsets([{ topic:'telescopes', partition : 0, offset: message.offset }]).then(r => {
+        //     });
+        //   });
       }
-    }
-  });
+  })})
+   const msg2 = await msgPromise;
+   console.log(msg2);
+     const res = await fetch("http://localhost:8000/ElasticPart", {
+          method: "POST", 
+          headers: { Accept: "application/json" , "Content-Type": "application/json"},
+          body: JSON.stringify(msg2)});
+   consumer.disconnect();
+  // const res = await fetch("http://localhost:8000/ElasticPart", {
+  //         method: "POST", 
+  //         headers: { Accept: "application/json" , "Content-Type": "application/json"},
+  //         body: JSON.stringify(msg2)});
+  // await consumer.run({
+  //   autoCommitInterval: 5000,
+  //   eachMessage: async ({ topic, partition, message }) => {
+  //     console.log('TOPIC ' , topic);
+  //     console.log('PARTITION ',partition);
+  //     console.log('MESSAGE' , message.key.toString() , message.value.toString());
+  //     let currMsg = {
+  //       key : message.key.toString(),
+  //       value : message.value.toString()
+  //     };
+  //     // const res = await fetch("http://localhost:8000/ElasticPart", {
+  //     //   method: "POST", 
+  //     //   headers: { Accept: "application/json" , "Content-Type": "application/json"},
+  //     //   body: JSON.stringify(currMsg)}).then(s => {
+  //     //     consumer.commitOffsets([{ topic:'telescopes', partition : 0, offset: message.offset }]).then(r => {
+  //     //     });
+  //     //   });
+  //   }
+  // });
 
-  await new Promise((resolve) => setTimeout(resolve, 5000));  
+  // async function sendOneMessage(){
+  //   await consumer.run({
+  //     autoCommitInterval: 5000,
+  //     eachMessage: async ({ topic, partition, message }) => {
+  //       console.log('TOPIC ' , topic);
+  //       console.log('PARTITION ',partition);
+  //       console.log('MESSAGE' , message.key.toString() , message.value.toString());
+  //       let currMsg = {
+  //         key : message.key.toString(),
+  //         value : message.value.toString()
+  //       };
+  //       const res = await fetch("http://localhost:8000/ElasticPart", {
+  //         method: "POST", 
+  //         headers: { Accept: "application/json" , "Content-Type": "application/json"},
+  //         body: JSON.stringify(currMsg)}).then(s => {
+  //           consumer.commitOffsets([{ topic:'telescopes', partition : 0, offset: message.offset }]).then(r => {
+  //           });
+  //         });
+  //     }
+  //   });
+  // }
 
-  consumer.disconnect()
+  // consumer.disconnect();
 }
 
 const port = 5000;
