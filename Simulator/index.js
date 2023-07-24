@@ -18,34 +18,31 @@ try {
     console.log("im error ", error);
   }
 }
-// sendToKafka();
-setInterval(sendToKafka, 20000);
+sendToKafka();
+// setInterval(sendToKafka, 20000);
 
-function calculateDecRA(place, time) {
-  // Get the latitude and longitude of the place (assuming place is in the format "City, Country")
-  const [latitude, longitude] = place.split(',').map(str => str.trim());
-  console.log(latitude)
-
-  // Parse the time string into a Date object
-  const date = new Date(time);
-  console.log(date);
-
-  // Calculate the Sun's position using SunCalc library
-  const sunPosition = SunCalc.getPosition(date, latitude, longitude);
-  console.log(sunPosition)
-
-  // Extract the Declination and Right Ascension from the Sun's position
-  const dec = sunPosition.altitude;
-  const ra = sunPosition.azimuth;
-
-  // Return the calculated Dec and RA
-  return {
-    dec,
-    ra
-  };
+async function calculateDecRA() {
+  try{
+  const response = await fetch(`http://localhost:5000/getRandomKey`);
+  if(response.ok){
+    const randKey = await response.text();
+    const splited = randKey.split(',')
+    console.log(splited);
+    const dec = splited[0];
+    const ra = splited[1];
+    return {
+      dec,
+      ra
+    };
+  } else {
+    console.error('Error: Fetch request failed with status', response.status);
+  }
+} catch (error) {
+  console.error('Error during fetch:', error);
+}
 }
 
-function generateSimulatedData() {
+async function generateSimulatedData() {
   const simulatedData = [];
   const events = ['GRB', 'Rise Brightness Apparent', 'Rise U', 'Rise Ray-X', 'Comet'];
   const levelsOfUrgency = [1, 2, 3, 4, 5];
@@ -59,7 +56,7 @@ function generateSimulatedData() {
   console.log(randomKey,"keyyyyyyyyyyyyyy");
   const randomValue = telescopeData[randomKey];
   console.log(randomValue.LatLng,"valueeeeeeeeeee")
-  const result = calculateDecRA(randomValue.LatLng, utcTime);
+  const result = await calculateDecRA();
   // Generate simulated data 
     const data = {
       time: utcTime,
@@ -68,7 +65,7 @@ function generateSimulatedData() {
       event: events[Math.floor(Math.random() * events.length)],
       urgency: levelsOfUrgency[Math.floor(Math.random() * levelsOfUrgency.length)],
     };
-
+  console.log(data)
   return data;
 }
 
