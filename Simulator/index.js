@@ -18,10 +18,11 @@ try {
     console.log("im error ", error);
   }
 }
-sendToKafka();
-// setInterval(sendToKafka, 20000);
+// sendToKafka();
+setInterval(sendToKafka, 20000);
 
 async function calculateDecRA() {
+  
   try{
   const response = await fetch(`http://localhost:5000/getRandomKey`);
   if(response.ok){

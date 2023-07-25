@@ -1,16 +1,6 @@
 const kafkaSingelton = require('./kafkaConfig')
+const axios = require('axios')
 
-
-const fetchData = async (currMsg)=>{
-
-            console.log('hererererererererer')
-            const res = await fetch("http://localhost:8000/ElasticPart", {
-            method: "POST", 
-            headers: { Accept: "application/json" , "Content-Type": "application/json"},
-            body: JSON.stringify(currMsg)})
-    
-    
-    }
 
 
 const consume = async () =>{
@@ -21,19 +11,28 @@ const consume = async () =>{
     console.log('Consumer connected');
     await consumer.subscribe({ topic: 'telescopes', fromBeginning: true });
     console.log('Consumer subscribed to topic: telescopes');
-    consumer.run({
-        eachBatchAutoResolve: false,
-        eachBatch: async ({ batch, resolveOffset, heartbeat, isRunning, isStale }) => {
-            for (let message of batch.messages) {
-                if (!isRunning() || isStale()) break
-                let currMsg = {
-                    key : message.key.toString(),
-                    value : message.value.toString()
-                  };
-                await fetchData(currMsg)
-                resolveOffset(message.offset)
-                await heartbeat()
-            }
+    await consumer.run({
+        eachMessage: async ({ topic, partition, message }) => {
+          let currMsg = {
+            key : message.key.toString(),
+            value : message.value.toString()
+          };
+          console.log(currMsg)
+          try {
+            const url = "http://localhost:8000/ElasticPart";
+            console.log("i was here")
+        
+            // Send a POST request using Axios
+            const response = await axios.post(url, currMsg, {
+              headers: { Accept: "application/json", "Content-Type": "application/json" },
+            });
+            console.log("i wasnt here")
+        
+            // Handle the response data here if needed
+            console.log("Response:", response.data);
+          } catch (error) {
+            console.error("Error posting data:", error);
+          }
         }
     })
   }

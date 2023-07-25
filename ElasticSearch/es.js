@@ -37,11 +37,12 @@ app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
 
-app.post('/ElasticPart', async (req) => {
+app.post('/ElasticPart', async (req, res) => {
     try {
       let msg = req.body
       const indexName = 'myindex4';
       const response = await createIndex(indexName, msg.key, msg.value);
+      res.send({data: "success"});
     } catch (error) {
       console.error('Error sending message:', error);
       res.status(500).send("Error sending message.");
