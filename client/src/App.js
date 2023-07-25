@@ -5,6 +5,7 @@ import MyTopBar from "./global/MyTopBar"
 import DashBoard from "./pages/dashboard";
 import Search from "./pages/search";
 import Analyze from "./pages/analyze";
+import CardsScreen from "./pages/CardScreen"
 import { Routes,Route } from "react-router-dom";
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
             <Route path="/" element = {<DashBoard/>}/>
             <Route path="/search" element = {<Search/>}/>
             <Route path="/analyze" element = {<Analyze/>}/>
+            <Route path="/cards" element = {<CardsScreen/>}/>
           </Routes>
           </main>
         </div>

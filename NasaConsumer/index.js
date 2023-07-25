@@ -4,6 +4,7 @@ const fetch = require('node-fetch');
 const app = express();
 
 
+
 //GET SPECIFIC ASTEROID BY ID
 //get link should look like this : http://localhost:4000/astroid?asteroid_id={#ASTROID_ID}
 app.get('/astroid', async (req, res) => {
@@ -70,6 +71,7 @@ app.get('/all', async (req, res) => {
       res.status(500).json({ error: 'Internal server error' });
     }
   });
+
 
 // Start the server
 const port = 4000;
