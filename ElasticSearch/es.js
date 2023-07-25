@@ -53,6 +53,7 @@ app.post('/ElasticPart', async (req, res) => {
   app.get('/getevents', async (req, res) => {
     try {
       const val = req.query.range
+      console.log(val)
       const sumsByUrgency = await calculateSums(val);
       
       // res.send({sumsByUrgency})
@@ -91,7 +92,7 @@ app.post('/ElasticPart', async (req, res) => {
       };
   
       const response = await client.search(query);
-      console.log(response)
+      // console.log(response)
   
       // Process the results and calculate sums for each urgency level
       const sumsByUrgency = [0, 0, 0, 0, 0]; // Initialize sums array for each urgency level
@@ -102,7 +103,7 @@ app.post('/ElasticPart', async (req, res) => {
         const timestampDate = new Date(value.time);
         const timeDifference = currentTime - hit._source.key;
         const twentyFourHoursInMilliseconds = 24 * 7 * 60 * 60 * 1000;
-        console.log(typeof hit._source.key,hit._source.key)
+        // console.log(typeof hit._source.key,hit._source.key)
         const source = hit._source;
         const urgency = value.urgency;
         sumsByUrgency[urgency - 1]++;

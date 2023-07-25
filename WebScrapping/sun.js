@@ -1,50 +1,59 @@
+const cors = require('cors');
+const express = require('express');
 const axios = require('axios');
 const cheerio = require('cheerio');
 
-class SunScraper {
-  constructor() {
-    this.sunData = [];
-  }
+const app = express();
+app.use(cors());
+const port = 10000;
 
-  async scrapeSunInfo() {
-    try {
-      const url = 'https://theskylive.com/sun-info';
-      const response = await axios.get(url);
-      const $ = cheerio.load(response.data);
+async function scrapeSunInfo() {
+  try {
+    const url = 'https://theskylive.com/sun-info';
+    const response = await axios.get(url);
+    const $ = cheerio.load(response.data);
 
-      const dataRows = $('.objectdata tbody tr');
+    const sunData = [];
 
-      dataRows.each((index, element) => {
-        const columns = $(element).find('td');
-        const date = $(columns[0]).text().trim();
-        const ra = $(columns[1]).text().trim();
-        const dec = $(columns[2]).text().trim();
-        const mag = $(columns[3]).text().trim();
-        const diameter = $(columns[4]).text().trim();
+    const dataRows = $('.objectdata tbody tr');
 
-        if (date && ra && dec && mag && diameter) {
-          this.sunData.push({
-            date: date,
-            ra: ra,
-            dec: dec,
-            mag: mag,
-            diameter: diameter,
-          });
-        }
-      });
-    } catch (error) {
-      console.error('Error:', error);
-    }
+    dataRows.each((index, element) => {
+      const columns = $(element).find('td');
+      const date = $(columns[0]).text().trim();
+      const ra = $(columns[1]).text().trim();
+      const dec = $(columns[2]).text().trim();
+      const mag = $(columns[3]).text().trim();
+      const diameter = $(columns[4]).text().trim();
+
+      if (date && ra && dec && mag && diameter) {
+        sunData.push({
+          date: date,
+          ra: ra,
+          dec: dec,
+          mag: mag,
+          diameter: diameter,
+        });
+      }
+    });
+
+    return sunData;
+  } catch (error) {
+    console.error('Error:', error);
+    throw error;
   }
 }
 
-(async () => {
-  const sunScraper = new SunScraper();
-  await sunScraper.scrapeSunInfo();
+app.get('/getSunData', async (req, res) => {
+  try {
+    const sunData = await scrapeSunInfo();
 
-  console.log(sunScraper.sunData);
+    res.send({sunData});
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({ error: 'Error fetching Sun data' });
+  }
+});
 
-// an example how to take only dates
-const dates = sunScraper.sunData.map(data => data.date);
-console.log(dates);
-})();
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+});

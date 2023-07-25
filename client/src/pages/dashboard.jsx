@@ -4,6 +4,7 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, PieChart, 
 import { Link } from 'react-router-dom';
 import { useTheme } from "@mui/material";
 import { tokens } from "../theme";
+import SunTable from '../components/SunTable';
 
 const HomePage = () => {
   const theme = useTheme();
@@ -14,7 +15,8 @@ const HomePage = () => {
     // Function to fetch data from the server
     const fetchData = async () => {
       try {
-        const response = await fetch('http://localhost:8000/getevents');
+        const val = 7
+        const response = await fetch(`http://localhost:8000/getevents?range=${val}`);
 
         if (!response.ok) {
           throw new Error('Network response was not ok');
@@ -86,6 +88,7 @@ console.log('dsassssssssssssssssssssssssssssssssssssssssssssssss',sumsByUrgency)
           </PieChart>
           </div>
       </div>
+      <SunTable/>
     </div>
   );
 };
