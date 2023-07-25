@@ -14,12 +14,13 @@ var client        = new elasticsearch.Client(
 
 async function createIndex(indexName, key, value) {
   try {
+    const keyNumber = +key;
     const response = await client.index({
       index: indexName,
       type: 'my-type',
-      id: key,
+      id: keyNumber,
       body: {
-        key: key,
+        key: keyNumber,
         value: value,
       }
     });
@@ -40,7 +41,7 @@ app.listen(port, () => {
 app.post('/ElasticPart', async (req, res) => {
     try {
       let msg = req.body
-      const indexName = 'myindex4';
+      const indexName = 'myindex5';
       const response = await createIndex(indexName, msg.key, msg.value);
       res.send({data: "success"});
     } catch (error) {
@@ -51,7 +52,9 @@ app.post('/ElasticPart', async (req, res) => {
 
   app.get('/getevents', async (req, res) => {
     try {
-      const sumsByUrgency = await calculateSums();
+      const val = req.query.range
+      const sumsByUrgency = await calculateSums(val);
+      
       // res.send({sumsByUrgency})
       res.status(200).json({ sumsByUrgency });
     } catch (error) {
@@ -62,23 +65,29 @@ app.post('/ElasticPart', async (req, res) => {
   
 
 
-  async function calculateSums() {
+  async function calculateSums(val) {
     try {
-      const indexName = 'myindex4';
+      const indexName = 'myindex5';
   
       // Calculate the timestamp for 24 hours ago from the current time
-      const twentyFourHoursAgo = new Date(Date.now() - 24 *7 * 60 * 60 * 1000).toString();
-      console.log(twentyFourHoursAgo,'dsasssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss')
-  
+      const twentyFourHoursAgoTimestamp = Date.now() - 24 *val* 60 * 60 * 1000;
+
+
       // Define the Elasticsearch query with a range filter to get documents within the last 24 hours
       const query = {
         index: indexName,
         body: {
           query: {
-            match_all: {}, // Retrieve all documents
+            range: {
+              "key": {
+                "gte": twentyFourHoursAgoTimestamp,
+                
+               
+              }
+            }
           },
-        },
-        size: 10000, // Increase this value if you have more than 10,000 documents
+          size: 10000 // Increase this value if you have more than 10,000 documents
+        }
       };
   
       const response = await client.search(query);
@@ -91,14 +100,12 @@ app.post('/ElasticPart', async (req, res) => {
         const value = JSON.parse(hit._source.value);
         const currentTime = new Date();
         const timestampDate = new Date(value.time);
-        const timeDifference = currentTime - timestampDate;
-        const twentyFourHoursInMilliseconds = 24 * 60 * 60 * 1000;
-        console.log(value.time)
+        const timeDifference = currentTime - hit._source.key;
+        const twentyFourHoursInMilliseconds = 24 * 7 * 60 * 60 * 1000;
+        console.log(typeof hit._source.key,hit._source.key)
         const source = hit._source;
         const urgency = value.urgency;
-        if (timeDifference < twentyFourHoursInMilliseconds) {
-          sumsByUrgency[urgency - 1]++; // Increment the sum for the corresponding urgency level
-        }
+        sumsByUrgency[urgency - 1]++;
       });
       const sumsByUrgencyl = sumsByUrgency.map((value, index) => ({
         name: (index + 1).toString(),
@@ -112,3 +119,5 @@ app.post('/ElasticPart', async (req, res) => {
       console.error('Error querying Elasticsearch:', error);
     }
   }
+
+  // calculateSums();

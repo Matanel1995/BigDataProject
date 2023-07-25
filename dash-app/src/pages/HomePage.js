@@ -6,11 +6,13 @@ import {  Link } from 'react-router-dom';
 const HomePage = () => {
   // Sample data for the histogram chart
   const [sumsByUrgency, setSumsByUrgency] = useState([]);
+  const [sun, setSun] = useState([]);
   useEffect(() => {
     // Function to fetch data from the server
     const fetchData = async () => {
       try {
-        const response = await fetch('http://localhost:8000/getevents');
+        const val  = 0
+        const response = await fetch(`http://localhost:8000/getevents?range=${val}`);
 
         if (!response.ok) {
           throw new Error('Network response was not ok');
@@ -26,6 +28,10 @@ const HomePage = () => {
 
     fetchData();
   }, []);
+
+  
+
+
 
   const data = [
     { name: 'Category A', value: 12 },
