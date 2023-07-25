@@ -80,29 +80,29 @@ async function setRedis(key, value){
 
 
 
-const port = 5000;
+const port = 9000;
 app.listen(port, () => {
   console.log(`Redis Server is running on port ${port}`);
 });
 
 
 
-var str = fs.readFileSync(jsonFilePath);
-var jstr = JSON.parse(str);
-console.log(jstr.length)
-for( let i =10; i<100;i++){
-  const new_Star = new BrightStar(jstr[i]['harvard_ref_#'],jstr[i].RA,jstr[i].DEC,jstr[i]['RA PM'],jstr[i]['DEC PM'],jstr[i].MAG,jstr[i]['Title HD']);
-  const key = new_Star.RA+","+new_Star.DEC
-  const value = {harvard_ref:new_Star.harvard_ref,
-                RA: new_Star.RA,
-                RA_PM:new_Star.RA_PM,
-                DEC: new_Star.DEC,
-                DEC_PM: new_Star.DEC_PM,
-                MAG: new_Star.MAG,
-                TITLE: new_Star.Title_HD};
-setRedis(key,JSON.stringify(value));
-// console.log(key,value)
-}
+// var str = fs.readFileSync(jsonFilePath);
+// var jstr = JSON.parse(str);
+// console.log(jstr.length)
+// for( let i =3000; i<6000;i++){
+//   const new_Star = new BrightStar(jstr[i]['harvard_ref_#'],jstr[i].RA,jstr[i].DEC,jstr[i]['RA PM'],jstr[i]['DEC PM'],jstr[i].MAG,jstr[i]['Title HD']);
+//   const key = new_Star.RA+","+new_Star.DEC
+//   const value = {harvard_ref:new_Star.harvard_ref,
+//                 RA: new_Star.RA,
+//                 RA_PM:new_Star.RA_PM,
+//                 DEC: new_Star.DEC,
+//                 DEC_PM: new_Star.DEC_PM,
+//                 MAG: new_Star.MAG,
+//                 TITLE: new_Star.Title_HD};
+// setRedis(key,JSON.stringify(value));
+// // console.log(key,value)
+// }
 // // console.log("test");
 // getRedis('2023-05-20 2023-05-21').then((data)=>{console.log(JSON.stringify(data.result))});
 // // setRedis('test','s');

@@ -7,7 +7,7 @@ const telescopeData = require('./public/telescopeData');
 console.log(telescopeData);
 
 async function sendToKafka(){
-const simulatedData = generateSimulatedData();
+const simulatedData = await generateSimulatedData();
 try {
   const res = await fetch("http://localhost:5000/", {
     method: "POST", 
@@ -24,7 +24,7 @@ setInterval(sendToKafka, 20000);
 async function calculateDecRA() {
   
   try{
-  const response = await fetch(`http://localhost:5000/getRandomKey`);
+  const response = await fetch(`http://localhost:9000/getRandomKey`);
   if(response.ok){
     const randKey = await response.text();
     const splited = randKey.split(',')
