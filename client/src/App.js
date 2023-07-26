@@ -7,6 +7,7 @@ import Search from "./pages/search";
 import Analyze from "./pages/analyze";
 import CardsScreen from "./pages/CardScreen"
 import { Routes,Route } from "react-router-dom";
+import SunTable from "./components/SunTable";
 
 function App() {
   const [theme,colorMode] = useMode();
@@ -24,6 +25,7 @@ function App() {
             <Route path="/search" element = {<Search/>}/>
             <Route path="/analyze" element = {<Analyze/>}/>
             <Route path="/cards" element = {<CardsScreen/>}/>
+            <Route path="/sunTable" Component={SunTable}/>
           </Routes>
           </main>
         </div>
