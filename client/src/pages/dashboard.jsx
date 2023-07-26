@@ -6,6 +6,7 @@ import { useTheme, Box } from "@mui/material";
 import { tokens } from "../theme";
 import StatBox from "../components/StatBox";
 import NeoTable from '../components/NeoTable';
+import PassedChart from '../components/PassedChart';
 import Card from '../components/Card';
 import SunTable from '../components/SunTable';
 import MyButton from '../components/MyButton';
@@ -125,7 +126,7 @@ const HomePage = () => {
           </div>
 
         </div>
-        <Box sx={{ borderRadius: '16px', width: '22%' }}
+        <Box sx={{ borderRadius: '16px', width: '50%' }}
           backgroundColor={colors.primary[400]}
           display="flex"
           alignItems="top"
@@ -134,11 +135,14 @@ const HomePage = () => {
           paddingLeft="25px"
           height={"45vh"}
         >
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          <div style={{ display: 'flex', justifyContent: 'center' }}>
+            <div className='sunButton'>
             <MyButton buttonMessage='Click For Sun Dashboard' link="/sunTable" ></MyButton>
-            {sunImageUrl && <img src={sunImageUrl} alt="Sun" style={{ marginTop: '80px', width: '200px', borderRadius: '50%' }} />}
+            </div>
+            {sunImageUrl && <img src={sunImageUrl} alt="Sun" style={{ marginTop: '80px', width: '200px', borderRadius: '50%',alignItems:'center' }} />}
           </div>
         </Box>
+        <PassedChart/>
       </div>
     </div>
   );
