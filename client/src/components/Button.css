@@ -1,0 +1,14 @@
+.custom-button {
+    background-color: rgb(74, 72, 237);
+    color: white;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  .button-link {
+    text-decoration: none; /* Remove the default underline for the link */
+    color: white; /* Set the text color to white */
+  }
