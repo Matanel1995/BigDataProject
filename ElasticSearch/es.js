@@ -63,8 +63,52 @@ app.post('/ElasticPart', async (req, res) => {
       res.status(500).json({ error: 'Error querying Elasticsearch' });
     }
   });
-  
 
+  app.get('/getLastEvent', async (req, res) => {
+    try {
+
+      const lastdoc = await fetchDocumentWithMaxKey();
+      // res.send({sumsByUrgency})
+      res.status(200).json({ lastdoc });
+    } catch (error) {
+      console.error('Error querying Elasticsearch:', error);
+      res.status(500).json({ error: 'Error querying Elasticsearch' });
+    }
+  });
+
+  
+  
+  async function fetchDocumentWithMaxKey() {
+    try {
+      // Elasticsearch query
+      const response = await client.search({
+        index: 'myindex5', // Replace with your index name
+        size: 1,
+        body: {
+          query: {
+            match_all: {},
+          },
+          sort: [
+            {
+              key: {
+                order: 'desc',
+              },
+            },
+          ],
+        },
+      });
+  
+      // Extract the relevant document from the Elasticsearch response
+      const maxKeyDocument = response.hits.hits[0]._source;
+  
+      // Return the document with the maximum key value
+      console.log(maxKeyDocument.value)
+      return maxKeyDocument.value;
+    } catch (error) {
+      console.error('Error fetching document:', error);
+      throw error;
+    }
+  } 
 
   async function calculateSums(val) {
     try {

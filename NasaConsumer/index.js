@@ -1,7 +1,9 @@
 const express = require('express');
 const fetch = require('node-fetch');
+const cors = require('cors');
 
 const app = express();
+app.use(cors());
 
 
 
@@ -72,6 +74,41 @@ app.get('/all', async (req, res) => {
     }
   });
 
+//GET THE FEED IN LAST 24H
+//get link should look like this : http://localhost:4000/Last24
+app.get('/Last24', async (req, res) => {
+  try {
+    const apiUrl = "https://ssd-api.jpl.nasa.gov/cad.api";
+
+    // Calculate the start date as the current date minus 1 day
+    const endDate = new Date();
+    const startDate = new Date(endDate);
+    startDate.setDate(startDate.getDate() - 7);
+
+    const formattedStartDate = formatDate(startDate);
+    const formattedEndDate = formatDate(endDate);
+
+    const requestUrl = `${apiUrl}?date-min=${formattedStartDate}&date-max=${formattedEndDate}`;
+
+    const response = await fetch(requestUrl);
+    const data = await response.json();
+
+    res.status(200).json(data); // Return the data as a response
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+
+// Function to format the date as "YYYY-MM-DD"
+function formatDate(date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
 
 // Start the server
 const port = 4000;
