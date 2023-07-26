@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper,Box } from '@mui/material';
 
 const SunTable = () => {
 
@@ -28,32 +28,33 @@ const SunTable = () => {
       
 
   return (
-    <TableContainer component={Paper}>
+    <Box p={2} width="80%" mx="auto" boxShadow={3}>
+      <h1 style={{ textAlign: 'center', marginBottom: '20px' }}>The Sun 15 Days Ephemeris</h1>
+    <TableContainer component={Paper}style={{ maxHeight: '400px', overflowY: 'auto' }}>
       <Table aria-label="simple table">
         <TableHead>
           <TableRow>
-            <TableCell>Date</TableCell>
-            <TableCell align="right">RA</TableCell>
-            <TableCell align="right">Dec</TableCell>
-            <TableCell align="right">Magnitude</TableCell>
-            <TableCell align="right">Diameter</TableCell>
+            <TableCell align="center">Date</TableCell>
+            <TableCell align="center">RA</TableCell>
+            <TableCell align="center">Dec</TableCell>
+            <TableCell align="center">Magnitude</TableCell>
+            <TableCell align="center">Diameter</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {dataArray.map((item, index) => (
             <TableRow key={index}>
-              <TableCell component="th" scope="row">
-                {item.date}
-              </TableCell>
-              <TableCell align="right">{item.ra}</TableCell>
-              <TableCell align="right">{item.dec}</TableCell>
-              <TableCell align="right">{item.mag}</TableCell>
-              <TableCell align="right">{item.diameter}</TableCell>
+              <TableCell align="center">{item.date}</TableCell>
+              <TableCell align="center">{item.ra}</TableCell>
+              <TableCell align="center">{item.dec}</TableCell>
+              <TableCell align="center">{item.mag}</TableCell>
+              <TableCell align="center">{item.diameter}</TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
     </TableContainer>
+    </Box>
   );
 };
 
