@@ -135,8 +135,8 @@ const HomePage = () => {
           height={"45vh"}
         >
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <MyButton buttonMessage='Click For Sun Dashboard' link="/sunTable" ></MyButton>
-            {sunImageUrl && <img src={sunImageUrl} alt="Sun" style={{ marginTop: '80px', width: '200px', borderRadius: '50%' }} />}
+            <MyButton buttonMessage='Click For Sun Dashboard' link="/sunPage" ></MyButton>
+            {sunImageUrl && <img src={sunImageUrl} alt="Sun" style={{ marginTop: '80px', width: '200px', borderRadius: '50%',alignItems:'center' }} />}
           </div>
         </Box>
       </div>
