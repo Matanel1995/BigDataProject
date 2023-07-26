@@ -1,27 +1,70 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect,useRef } from 'react';
 import Cards from '../components/Cards';
+import {PieChart,Pie,Cell ,BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend,ResponsiveContainer } from 'recharts';
+import StatBox from "../components/StatBox";
+import { tokens } from "../theme";
+import { useTheme, Box } from "@mui/material";
 
 const CardsScreen = () => {
   // Sample data for the cards
+  const theme = useTheme();
+  const [screenWidth, setScreenWidth] = useState(window.innerWidth);
+  const [screenHeight, setScreenHeight] = useState(window.innerHeight);
+  const colors = tokens(theme.palette.mode);
   const [showCards, setShowCards] = useState(false);
   const [events, setEvents] = useState([]);
+  const [data, setData] = useState([])
+  const [dataGroupedByTelescop, setDataGroupedByTelescop] = useState([])
+  const [divHeight,setDivHeight] = useState(0)
+
+  const divRef = useRef(null);
+
+  // Function to check the height of the div
+  const checkDivHeight = () => {
+    if (divRef.current) {
+      const divHeight = divRef.current.clientHeight;
+      console.log(divHeight)
+      return divHeight
+    }
+  };
+  
+  
+  const handleResize = () => {
+    setScreenWidth(window.innerWidth);
+    setScreenHeight(window.innerHeight);
+    setDivHeight(checkDivHeight-87)
+  };
+
+  useEffect(() => {
+    // Add event listener to handle screen resize
+    window.addEventListener('resize', handleResize);
+
+    // Clean up the event listener on component unmount
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
   const handleButtonClick = () => {
-    setShowCards((curr)=> !curr); // This will set the showCards state to true when the button is pressed
+    setShowCards((curr) => !curr); // This will set the showCards state to true when the button is pressed
   };
   useEffect(() => {
     // Function to fetch data from the server
     const fetchData = async () => {
       try {
-        const val = 1
+        const val = 2
         const response = await fetch(`http://localhost:8000/geteventsFull?range=${val}`);
 
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
 
-        const data = await response.json();
+        const dataAns = await response.json();
         // console.log(data)
-        setEvents(data.events);
+        setEvents(dataAns.events);
+
+
+
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -29,39 +72,119 @@ const CardsScreen = () => {
 
     fetchData();
   }, []);
-  
-  
-  
-  
-  
-  const cardData = 
-  [{"harvard_ref_#":1,"RA":"00:05:09.90","DEC":"+45:13:45.00","Epoch":2000,"RA PM":"-00.012","DEC PM":"-00.018","MAG":"6.70","Title HD":"A1Vn"},
-  {"harvard_ref_#":2,"RA":"00:05:03.80","DEC":"-00:30:11.00","Epoch":2000,"RA PM":"+00.045","DEC PM":"-00.060","MAG":"6.29","Title HD":"gG9"},
-  {"harvard_ref_#":3,"RA":"00:05:20.10","DEC":"-05:42:27.00","Epoch":2000,"RA PM":"-00.009","DEC PM":"+00.089","MAG":"4.61","Title HD":"K0III"},
-  {"harvard_ref_#":4,"RA":"00:05:42.00","DEC":"+13:23:46.00","Epoch":2000,"RA PM":"+00.045","DEC PM":"-00.012","MAG":"5.51","Title HD":"G5III"},
-  {"harvard_ref_#":5,"RA":"00:06:16.00","DEC":"+58:26:12.00","Epoch":2000,"RA PM":"+00.263","DEC PM":"+00.030","MAG":"5.96","Title HD":"G5V"},
-  {"harvard_ref_#":6,"RA":"00:06:19.00","DEC":"-49:04:30.00","Epoch":2000,"RA PM":"+00.565","DEC PM":"-00.038","MAG":"5.70","Title HD":"G1IV"},
-  {"harvard_ref_#":7,"RA":"00:06:26.50","DEC":"+64:11:46.00","Epoch":2000,"RA PM":"+00.008","DEC PM":"+00.000","MAG":"5.59","Title HD":"B9III"},
-  {"harvard_ref_#":8,"RA":"00:06:36.80","DEC":"+29:01:17.00","Epoch":2000,"RA PM":"+00.380","DEC PM":"-00.182","MAG":"6.13","Title HD":"K0V"},
-  {"harvard_ref_#":9,"RA":"00:06:50.10","DEC":"-23:06:27.00","Epoch":2000,"RA PM":"+00.100","DEC PM":"-00.045","MAG":"6.18","Title HD":"A7V"},
-  {"harvard_ref_#":10,"RA":"00:07:18.20","DEC":"-17:23:11.00","Epoch":2000,"RA PM":"-00.018","DEC PM":"+00.036","MAG":"6.19","Title HD":"A6Vn"},
-  {"harvard_ref_#":11,"RA":"00:07:44.10","DEC":"-02:32:56.00","Epoch":2000,"RA PM":"+00.027","DEC PM":"-00.002","MAG":"6.43","Title HD":"B8III"},
-  {"harvard_ref_#":12,"RA":"00:07:46.80","DEC":"-22:30:32.00","Epoch":2000,"RA PM":"+00.052","DEC PM":"-00.044","MAG":"5.94","Title HD":"A2Vp:"},
-  {"harvard_ref_#":13,"RA":"00:08:03.50","DEC":"-33:31:46.00","Epoch":2000,"RA PM":"-00.037","DEC PM":"+00.000","MAG":"5.68","Title HD":"K1III"},
-  {"harvard_ref_#":14,"RA":"00:08:12.10","DEC":"-02:26:52.00","Epoch":2000,"RA PM":"+00.009","DEC PM":"-00.003","MAG":"6.07","Title HD":"K2III"},
-  {"harvard_ref_#":15,"RA":"00:08:23.30","DEC":"+29:05:26.00","Epoch":2000,"RA PM":"+00.136","DEC PM":"-00.163","MAG":"2.06","Title HD":"B8IVp"},
-    // Add more card data here if needed...
-  ];
+
+
+  useEffect(() => {
+    // Function to fetch data from the server
+    const countPerHour = async () => {
+      const hourCounts = events.reduce((acc, message) => {
+        const hour = getHour(message.time);
+        acc[hour] = (acc[hour] || 0) + 1;
+        return acc;
+      }, {})
+      const datas = Object.keys(hourCounts).map((hour) => ({
+        hour: `${hour}:00`,
+        count: hourCounts[hour],
+      }));
+      setData(datas)
+     
+      const preData = events.map((item) => ({
+        name: item.telescopeName,
+        value: 1,
+      }));
+
+      console.log(preData,'here it pre data')
+      setDataGroupedByTelescop(groupAndSumByName(preData));
+      console.log(dataGroupedByTelescop,'checkif good')
+
+
+
+    };
+
+    countPerHour();
+  }, [events]);
+
+
+
+
+  const getHour = (timestamp) => {
+    const date = new Date(timestamp);
+
+    return date.getHours();
+  };
+
+function groupAndSumByName(array) {
+  const groupedData = {};
+
+  array.forEach(item => {
+    const name = item.name;
+    const value = item.value;
+
+    if (groupedData[name]) {
+      groupedData[name] += value;
+    } else {
+      groupedData[name] = value;
+    }
+  });
+
+  // Convert the grouped data object into an array of objects
+  const resultArray = Object.keys(groupedData).map(name => ({ name, value: groupedData[name] }));
+
+  return resultArray;
+}
+const COLORS = ['#0088FE', '#00C49F', '#FFBB28',
+ '#FF8042', '#8884D8', '#FFA07A', '#20B2AA', '#9370DB', 
+ '#32CD32', '#FF1493', '#00CED1', '#FF4500'];
 
   return (
-    <div>
-      <div style={{ display: 'flex', justifyContent: 'center' }}>
-        <h2>Cards Screen</h2>
+    <div >
+<div style={{display:'flex',justifyContent: 'center', alignItems: 'center'}}>
+  <h1>Last day event </h1>
+</div>
+    <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-around',margin:10}}>
+      <div ref={divRef} style={{width:'100%',height:'100%',backgroundColor:colors.primary[400],borderRadius:20}}>
+        <h2 style={{paddingLeft:4}}>Events per hour</h2>
+   
+            <BarChart width={screenWidth/3} height={screenHeight/3} style={{marginRight:20}}  data={data}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="hour" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <Bar dataKey="count" fill="#8884d8" />
+            </BarChart>
+    
+            
+      </div>  
+      <div style={{width:'100%',height:'100%',backgroundColor:colors.primary[400],marginLeft:20,borderRadius:20,flexDirection:'row'}}>
+        <h2 style={{paddingLeft:4}}>Event detials</h2>
+         <Cards data={events} size={checkDivHeight()-87} />       
+      </div>  
+
       </div>
-      <div style={{ display: 'flex', justifyContent: 'center' }}>
-        <button onClick={handleButtonClick}>Show Cards</button>  
-      </div>
-      {showCards && <Cards data={events} />} {/* The Cards component will only render if showCards is true */}
+      <div style={{width:'100%',height:'100%',backgroundColor:colors.primary[400],borderRadius:20}}>
+      <h1>
+ telescope location istribution</h1>
+      {/* <ResponsiveContainer aspect={8} > */}
+      <PieChart width={screenWidth/1.3} height={screenHeight/4} >
+              <Pie
+                data={dataGroupedByTelescop}
+                dataKey="value"
+                nameKey="name"
+                cx="50%"
+                cy="50%"
+                outerRadius={100}
+                fill="#8884d8"
+                label
+              >
+                {dataGroupedByTelescop.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />))}
+              </Pie>
+              <Legend  align="end" layout="vertical" verticalAlign="middle" />
+              <Tooltip />
+            </PieChart>
+            {/* </ResponsiveContainer> */}
+   </div>
     </div>
   );
 };

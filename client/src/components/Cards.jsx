@@ -1,9 +1,11 @@
 import React from 'react';
 import { Card, CardContent, Typography, Grid } from '@mui/material';
 
-const Cards = ({ data }) => {
+const Cards = (props) => {
+  const { data, size } = props;
+  const s = `${size}px`
   return (
-    <div style={{ height: '400px', overflowY: 'auto', margin: '20px', }}>
+    <div style={{ height: s, overflowY: 'auto', margin: '20px', }}>
       <Grid container spacing={3} justifyContent="center">
         {data.map((item, index) => (
           <Grid item key={index} xs={12} sm={6} md={4}>
@@ -16,10 +18,10 @@ const Cards = ({ data }) => {
                   Telescop Name: {item["telescopeName"]}
                 </Typography>
                 <Typography color="textSecondary">
-                  DEC: {item["DEC_RA"].dec}
+                  DEC: {item["DEC_RA"]?.dec}
                 </Typography>
                 <Typography color="textSecondary">
-                  RA: {item["DEC_RA"].ra}
+                  RA: {item["DEC_RA"]?.ra}
                 </Typography>
                 <Typography color="textSecondary">
                   Event: {item["event"]}

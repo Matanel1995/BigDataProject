@@ -33,3 +33,16 @@ body,
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
+
+.sun-button {
+  background-color:#e0e0e0;
+  color: white;
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+}
+
+.sun-button:hover {
+  background-color: #e0e0e0;
+}
