@@ -35,7 +35,6 @@ const MySidebar = () => {
   const [selected, setSelected] = useState("Dashboard");
 
   return (
-
     <Sidebar collapsed={isCollapsed} backgroundColor= {colors.primary[400]}>
       <Menu iconShape="square" >
         {/* LOGO AND MENU ICON */}

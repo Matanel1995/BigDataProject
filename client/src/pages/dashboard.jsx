@@ -5,12 +5,14 @@ import { Link } from 'react-router-dom';
 import { useTheme } from "@mui/material";
 import { tokens } from "../theme";
 import SunTable from '../components/SunTable';
+import Card from '../components/Card';
 
 const HomePage = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   // Sample data for the histogram chart
   const [sumsByUrgency, setSumsByUrgency] = useState([]);
+  const [lastDoc,SetLastDoc] = useState();
   useEffect(() => {
     // Function to fetch data from the server
     const fetchData = async () => {
@@ -23,7 +25,7 @@ const HomePage = () => {
         }
 
         const data = await response.json();
-        console.log(data)
+        // console.log(data)
         setSumsByUrgency(data.sumsByUrgency);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -32,6 +34,27 @@ const HomePage = () => {
 
     fetchData();
   }, []);
+
+  useEffect(() => {
+    const fetchDoc = async () => {
+      try {
+        const response = await fetch(`http://localhost:8000/getLastEvent`);
+  
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+  
+        const data = await response.json();
+        console.log(data.lastdoc,'ssssssssssssssssssssssssssssssssssssssssssss')
+        SetLastDoc(data.lastdoc);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+  
+    fetchDoc();
+  }, []);
+
 
   const data = [
     { name: 'Category A', value: 12 },
@@ -51,14 +74,15 @@ console.log('dsassssssssssssssssssssssssssssssssssssssssssssssss',sumsByUrgency)
       </div>
       <div style={{ width: '80%', margin: '0 auto',display:'flex' }}>
       <div style={{ backgroundColor: 'white', padding: '20px', margin: '20px' }}>
-        <BarChart width={500} height={300} data={data}>
+        {/* <BarChart width={500} height={300} data={data}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="name" />
           <YAxis />
           <Tooltip />
           <Legend />
           <Bar dataKey="value" fill="rgba(54, 162, 235, 0.6)" />
-        </BarChart>
+        </BarChart> */}
+         <Card data={lastDoc} />
         </div>
         <div style={{ backgroundColor: 'white', padding: '20px', margin: '20px' }}>
         <div style={{ display: 'flex', justifyContent: 'center' }}>
