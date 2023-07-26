@@ -1,13 +1,39 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import Cards from '../components/Cards';
 
 const CardsScreen = () => {
   // Sample data for the cards
   const [showCards, setShowCards] = useState(false);
+  const [events, setEvents] = useState([]);
   const handleButtonClick = () => {
     setShowCards((curr)=> !curr); // This will set the showCards state to true when the button is pressed
   };
+  useEffect(() => {
+    // Function to fetch data from the server
+    const fetchData = async () => {
+      try {
+        const val = 1
+        const response = await fetch(`http://localhost:8000/geteventsFull?range=${val}`);
 
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+
+        const data = await response.json();
+        // console.log(data)
+        setEvents(data.events);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+  
+  
+  
+  
+  
   const cardData = 
   [{"harvard_ref_#":1,"RA":"00:05:09.90","DEC":"+45:13:45.00","Epoch":2000,"RA PM":"-00.012","DEC PM":"-00.018","MAG":"6.70","Title HD":"A1Vn"},
   {"harvard_ref_#":2,"RA":"00:05:03.80","DEC":"-00:30:11.00","Epoch":2000,"RA PM":"+00.045","DEC PM":"-00.060","MAG":"6.29","Title HD":"gG9"},
@@ -35,7 +61,7 @@ const CardsScreen = () => {
       <div style={{ display: 'flex', justifyContent: 'center' }}>
         <button onClick={handleButtonClick}>Show Cards</button>  
       </div>
-      {showCards && <Cards data={cardData} />} {/* The Cards component will only render if showCards is true */}
+      {showCards && <Cards data={events} />} {/* The Cards component will only render if showCards is true */}
     </div>
   );
 };

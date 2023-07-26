@@ -9,29 +9,23 @@ const Cards = ({ data }) => {
           <Grid item key={index} xs={12} sm={6} md={4}>
             <Card variant="outlined">
               <CardContent>
-                <Typography variant="h5" component="h2">
-                  {item["Title HD"]}
+                <Typography color="textSecondary">
+                  {item["time"]}
                 </Typography>
                 <Typography color="textSecondary">
-                  Harvard Reference: {item["harvard_ref_#"]}
+                  Telescop Name: {item["telescopeName"]}
                 </Typography>
                 <Typography color="textSecondary">
-                  RA: {item["RA"]}
+                  DEC: {item["DEC_RA"].dec}
                 </Typography>
                 <Typography color="textSecondary">
-                  DEC: {item["DEC"]}
+                  RA: {item["DEC_RA"].ra}
                 </Typography>
                 <Typography color="textSecondary">
-                  Epoch: {item["Epoch"]}
+                  Event: {item["event"]}
                 </Typography>
                 <Typography color="textSecondary">
-                  RA PM: {item["RA PM"]}
-                </Typography>
-                <Typography color="textSecondary">
-                  DEC PM: {item["DEC PM"]}
-                </Typography>
-                <Typography color="textSecondary">
-                  MAG: {item["MAG"]}
+                  Urgency: {item["urgency"]}
                 </Typography>
               </CardContent>
             </Card>
