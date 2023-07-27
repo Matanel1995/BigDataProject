@@ -41,7 +41,7 @@ app.listen(port, () => {
 app.post('/ElasticPart', async (req, res) => {
     try {
       let msg = req.body
-      const indexName = 'myindex5';
+      const indexName = 'myindex6';
       const response = await createIndex(indexName, msg.key, msg.value);
       res.send({data: "success"});
     } catch (error) {
@@ -166,3 +166,74 @@ app.post('/ElasticPart', async (req, res) => {
   }
 
   // calculateSums();
+
+  
+  app.get('/getSearch', async (req, res) => {
+    try {
+      const start = req.query.start // start date 
+      const end = req.query.end  // end format
+      const  eventType = req.query.event // Event type : commet/astroid
+      const telescopName = req.query.telescopName
+
+      const response = await d(start,end,eventType,telescopName);
+      console.log(response)
+      res.send({response})
+    } catch (error) {
+        console.log(error)
+    }
+  });
+
+  async function d(start, end, event,telescopName){
+    // const end = Date.now() 
+    // const start = Date.now() - 24 * 7 * 60 * 60 * 1000;
+    console.log("IM HERE")
+    console.log(telescopName)
+    const query = {
+      index: 'myindex5',
+      body: {
+        query: {
+          bool: {
+            must: [
+              {
+                range: {
+                  "key": {
+                    "gte": start,
+                    "lte": end,
+                  }
+                }
+              },
+            ]
+          }
+        },
+        size: 10000 // Increase this value if you have more than 10,000 documents
+      }
+    };
+  
+    // Add the match clause for "value" if the "event" parameter is defined
+    if (event !== "") {
+      query.body.query.bool.must.push({
+        match: {
+          "value": event
+        }
+      });
+    }
+    if(telescopName !== ""){
+      query.body.query.bool.must.push({
+        match: {
+          "value": telescopName
+        }
+      });
+    }
+
+
+    const allAns = []
+    const response = await client.search(query);
+    response.hits.hits.forEach((hit) => {
+      const value = JSON.parse(hit._source.value);
+      allAns.push(value);
+      console.log(value)
+    });
+    return allAns;
+  }
+
+  // d(1111,2222,'dddd');
