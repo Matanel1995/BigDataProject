@@ -18,17 +18,6 @@ const HomePage = () => {
   const [lastDoc, SetLastDoc] = useState();
    // Sample data for the histogram chart
    const [sumsByUrgency, setSumsByUrgency] = useState([]);
-   const [isBlinking, setIsBlinking] = useState(false);
-
-   useEffect(() => {
-    // Start the blinking effect when the component mounts
-    const interval = setInterval(() => {
-      setIsBlinking((prevIsBlinking) => !prevIsBlinking);
-    }, 1000);
-
-    // Clean up the interval when the component unmounts
-    return () => clearInterval(interval);
-  }, []);
 
   useEffect(() => {
     const fetchDoc = async () => {
@@ -132,8 +121,6 @@ const HomePage = () => {
       </Box>
       <div style={{ width: '80%', margin: '0 auto', display: 'flex' }}>
         <div style={{ backgroundColor: colors.primary[400], padding: '20px', margin: '20px', borderRadius: 20 }}>
-        {/* <div style={{ width: '25px', height: '25px', background: isBlinking ? 'red' : 'lightgray', position: 'relative',borderRadius:'50%' }}>
-    </div> */}
           <Card data={lastDoc} />
         </div>
         <div style={{ backgroundColor: colors.primary[400], padding: '20px', margin: '20px', borderRadius: 20 }}>

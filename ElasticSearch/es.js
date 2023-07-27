@@ -64,6 +64,20 @@ app.post('/ElasticPart', async (req, res) => {
     }
   });
 
+  app.get('/geteventsFull', async (req, res) => {
+    try {
+      const val = req.query.range
+      console.log(val)
+      const events = await getFullEvents(val);
+      
+      // res.send({sumsByUrgency})
+      res.status(200).json({ events });
+    } catch (error) {
+      console.error('Error querying Elasticsearch:', error);
+      res.status(500).json({ error: 'Error querying Elasticsearch' });
+    }
+  });
+
   app.get('/getLastEvent', async (req, res) => {
     try {
 
@@ -75,6 +89,8 @@ app.post('/ElasticPart', async (req, res) => {
       res.status(500).json({ error: 'Error querying Elasticsearch' });
     }
   });
+
+  
 
   
   
@@ -164,5 +180,88 @@ app.post('/ElasticPart', async (req, res) => {
       console.error('Error querying Elasticsearch:', error);
     }
   }
+
+  async function getFullEvents(val) {
+    try {
+      const indexName = 'myindex5';
+  
+      // Calculate the timestamp for 24 hours ago from the current time
+      const twentyFourHoursAgoTimestamp = Date.now() - 24 *val* 60 * 60 * 1000;
+
+
+      // Define the Elasticsearch query with a range filter to get documents within the last 24 hours
+      const query = {
+        index: indexName,
+        body: {
+          query: {
+            range: {
+              "key": {
+                "gte": twentyFourHoursAgoTimestamp,
+                
+               
+              }
+            }
+          },
+          size: 10000 // Increase this value if you have more than 10,000 documents
+        }
+      };
+  
+      const response = await client.search(query);
+      // console.log(response)
+  
+      // Process the results and calculate sums for each urgency level
+      const allEvents = []; // Initialize sums array for each urgency level
+  
+      response.hits.hits.forEach((hit) => {
+        const value = JSON.parse(hit._source.value);
+        allEvents.push(value)
+      });
+      console.log('Sums by Urgency within the last 24 hours:', allEvents);
+      return allEvents;
+      
+      
+    } catch (error) {
+      console.error('Error querying Elasticsearch:', error);
+    }
+  }
+
+async function d(){
+  const end = Date.now() 
+  const start = Date.now() - 24 *7* 60 * 60 * 1000;
+
+
+
+  const query = {
+    index: 'myindex5',
+    body: {
+      query: {
+        nested: {
+          path: 'value',
+          query: {
+            term: {
+              'value.event': 'Comet'
+            }
+          }
+        }
+      },
+      size: 10000 // Increase this value if you have more than 10,000 documents
+    }
+  };
+
+  const response = await client.search(query);
+  // console.log(response)
+
+  // Process the results and calculate sums for each urgency level
+  const allEvents = []; // Initialize sums array for each urgency level
+
+  response.hits.hits.forEach((hit) => {
+    const value = JSON.parse(hit._source.value);
+    console.log('dsadsadasdsadasd')
+  });
+}
+
+
+
+
 
   // calculateSums();

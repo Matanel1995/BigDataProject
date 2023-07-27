@@ -8,7 +8,7 @@ console.log(parsedData?.time);
 const urgencyColor = parsedData?.urgency > 4 ? 'red' : '';
     return (
     <div style={{color:'gray'}} className="card" >
-        <h2>Last simulated event </h2>
+        <h1>Last simulated event </h1>
       <p className="telescope-name">Telescope Name:  {parsedData?.telescopeName}</p>
       <p className="time">Time: {parsedData?.time}</p>
       <p className="coordinates">
