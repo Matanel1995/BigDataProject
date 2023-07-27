@@ -1,7 +1,8 @@
 const express = require('express');
 const app = express();
 app.use(express.json());
-const cors = require('cors')
+const cors = require('cors');
+const WebSocket = require('ws');
 
 app.use(cors());
 var bonsai_url    = 'https://x9zur1yxtl:jka8ha38m8@bigdataproject-searc-5583828214.us-east-1.bonsaisearch.net:443';
@@ -10,6 +11,23 @@ var client        = new elasticsearch.Client(
     {
     host: bonsai_url,
     log: 'trace',                        
+});
+
+// Create a WebSocket server
+const wss = new WebSocket.Server({ port: 8080 });
+
+// Keep track of connected WebSocket clients
+const connectedClients = new Set();
+
+// Handle WebSocket connections
+wss.on('connection', (ws) => {
+  // Add the new client to the set of connected clients
+  connectedClients.add(ws);
+
+  // Remove the client from the set when the connection is closed
+  ws.on('close', () => {
+    connectedClients.delete(ws);
+  });
 });
 
 async function createIndex(indexName, key, value) {
@@ -39,16 +57,25 @@ app.listen(port, () => {
 });
 
 app.post('/ElasticPart', async (req, res) => {
-    try {
-      let msg = req.body
-      const indexName = 'myindex5';
-      const response = await createIndex(indexName, msg.key, msg.value);
-      res.send({data: "success"});
-    } catch (error) {
-      console.error('Error sending message:', error);
-      res.status(500).send("Error sending message.");
-    }
-  });
+  try {
+    let msg = req.body;
+    const indexName = 'myindex5';
+    const response = await createIndex(indexName, msg.key, msg.value);
+
+    // Notify connected clients about the new message
+    connectedClients.forEach((client) => {
+      if (client.readyState === WebSocket.OPEN) {
+        client.send(JSON.stringify({ type: 'newMessage' }));
+      }
+    });
+
+    res.send({ data: "success" });
+  } catch (error) {
+    console.error('Error sending message:', error);
+    res.status(500).send("Error sending message.");
+  }
+});
+
 
   app.get('/getevents', async (req, res) => {
     try {

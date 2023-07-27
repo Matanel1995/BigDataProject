@@ -1,13 +1,17 @@
 // Card.js
 import React from 'react';
 
+const cardStyle = {
+  color: 'white',
+  padding: '35px 0 0 0', // Add 20px padding from the top
+};
 const Card = ({ data }) => {
 //   const parsedData = JSON.parse(data) 
 const parsedData = data ? JSON.parse(data) : undefined;
 console.log(parsedData?.time);
 const urgencyColor = parsedData?.urgency > 4 ? 'red' : '';
     return (
-    <div style={{color:'gray'}} className="card" >
+    <div style={cardStyle} className="card" >
         <h1>Last simulated event </h1>
       <p className="telescope-name">Telescope Name:  {parsedData?.telescopeName}</p>
       <p className="time">Time: {parsedData?.time}</p>

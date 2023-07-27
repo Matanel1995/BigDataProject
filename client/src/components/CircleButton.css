@@ -1,0 +1,23 @@
+/* Add this CSS to Card.css */
+
+/* Red Circle Button */
+.red-circle-button {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%; /* Make it a circle by setting border-radius to 50% */
+    background-color: red;
+    border: none;
+    cursor: pointer;
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    outline: none;
+    /* Add any additional styles you want for the button */
+  }
+  
+  /* Disabled Style */
+  .red-circle-button.disabled {
+    background-color: gray;
+    cursor: not-allowed;
+  }
+  

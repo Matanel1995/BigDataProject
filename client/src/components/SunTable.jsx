@@ -32,16 +32,19 @@ const SunTable = () => {
       
 
   return (
-    <Box sx={{ borderRadius: '16px', width: '98%' }}
-        backgroundColor={colors.primary[400]}
-        display="flex"
-        alignItems="top"
-        margin="20px"
-        paddingTop="25px"
-        paddingLeft="25px"
-        height={"30vh"}
-      >
-        
+    <Box
+      sx={{
+        borderRadius: '16px',
+        width: '98%',
+        backgroundColor: colors.primary[400],
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        margin: '20px',
+        padding: '25px',
+        height: '40vh',
+      }}
+    >
       <h1 style={{ textAlign: 'center', marginBottom: '20px' }}>The Sun 15 Days Ephemeris</h1>
     <TableContainer component={Paper}style={{ maxHeight: '400px', overflowY: 'auto' }}>
       <Table aria-label="simple table">
