@@ -65,7 +65,7 @@ async function scrapeClosestApproach() {
     const descriptionElement = $('h1:contains("Closest Approach of The Sun to Earth")').next('p');
     const description = descriptionElement.text().trim();
 
-    closestApproachData['Title'] = 'Closest Approach of The Sun to Earth';
+    // closestApproachData['Title'] = 'Closest Approach of The Sun to Earth';
     closestApproachData['Description'] = description;
 
     $('.keyinfobox').each((index, element) => {
