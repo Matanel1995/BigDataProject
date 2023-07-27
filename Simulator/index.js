@@ -19,7 +19,7 @@ try {
   }
 }
 // sendToKafka();
-setInterval(sendToKafka, 20000);
+setInterval(sendToKafka, 10000);
 
 async function calculateDecRA() {
   

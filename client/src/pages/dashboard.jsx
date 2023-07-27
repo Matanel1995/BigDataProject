@@ -83,13 +83,15 @@ const HomePage = () => {
   }, []);
 
 
-  const data = [
-    { name: 'Category A', value: 12 },
-    { name: 'Category B', value: 19 },
-    { name: 'Category C', value: 3 },
-    { name: 'Category D', value: 5 },
-    { name: 'Category E', value: 2 },
-  ];
+  const ballStyle = {
+    width: '50px',
+    height: '50px',
+    borderRadius: '50%',
+    background: 'red',
+    position: 'absolute',
+    top: '0',
+    left: '0',
+  };
 
 
   const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8'];
