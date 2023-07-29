@@ -29,13 +29,14 @@ const Distribution = () => {
   useEffect(() => {
     // Function to fetch data from the server
     const fetchData = async () => {
+      console.log(`http://localhost:4000/feed?start_date=${formattedStartDate}&end_date=${formattedEndDate}`)
       try {
         const response = await fetch(`http://localhost:4000/feed?start_date=${formattedStartDate}&end_date=${formattedEndDate}`);
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
         const data = await response.json();
-
+        
         // Get an array of near_earth_objects
         const nearEarthObjectsArray = Object.values(data.near_earth_objects);
         console.log(nearEarthObjectsArray);
