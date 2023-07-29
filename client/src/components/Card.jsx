@@ -1,25 +1,27 @@
 // Card.js
 import React from 'react';
 
-const cardStyle = {
-  color: 'white',
-  padding: '35px 0 0 0', // Add 20px padding from the top
-};
+import { useTheme, Box } from "@mui/material";
+import { tokens } from "../theme";
+
 const Card = ({ data }) => {
-//   const parsedData = JSON.parse(data) 
-const parsedData = data ? JSON.parse(data) : undefined;
-console.log(parsedData?.time);
-const urgencyColor = parsedData?.urgency > 4 ? 'red' : '';
-    return (
-    <div style={cardStyle} className="card" >
-        <h1>Last simulated event </h1>
-      <p className="telescope-name">Telescope Name:  {parsedData?.telescopeName}</p>
-      <p className="time">Time: {parsedData?.time}</p>
-      <p className="coordinates">
+
+  const theme = useTheme();
+  const colors = tokens(theme.palette.mode);
+
+  //   const parsedData = JSON.parse(data) 
+  const parsedData = data ? JSON.parse(data) : undefined;
+  const urgencyColor = parsedData?.urgency > 4 ? 'red' : colors.grey[100];
+  return (
+    <div className="card" >
+      <h1 style={{color:colors.grey[100]}}> Last simulated event </h1>
+      <p style={{color:colors.grey[100]}} className="telescope-name">Telescope Name:  {parsedData?.telescopeName}</p>
+      <p style={{color:colors.grey[100]}} className="time">Time: {parsedData?.time}</p>
+      <p style={{color:colors.grey[100]}} className="coordinates">
         Coordinates: RA : {parsedData?.DEC_RA?.ra}, DEC: {parsedData?.DEC_RA?.dec}
       </p>
-      <p className="event">Event: {parsedData?.event}</p>
-      <p style={{color:urgencyColor}} className="urgency">Urgency: {parsedData?.urgency}</p>
+      <p style={{color:colors.grey[100]}} className="event">Event: {parsedData?.event}</p>
+      <p style={{ color: urgencyColor }} className="urgency">Urgency: {parsedData?.urgency}</p>
     </div>
   );
 };

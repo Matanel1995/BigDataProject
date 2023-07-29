@@ -5,6 +5,20 @@ import './Card.css';
 const WebSocketComponent = ({ data }) => {
   const [showRedCircle, setShowRedCircle] = useState(false);
   const [newMessageCount, setNewMessageCount] = useState(0);
+  const [currColor, setCurrColor] = useState(0);
+
+  const colorArray = [
+    '#FFFFCC',
+    '#FFFF99',
+    '#FFFF66',
+    '#FFFF33',
+    '#FFFF00',
+    '#FFCC00',
+    '#FF9900',
+    '#FF6600',
+    '#FF3300',
+    '#FF0000',
+  ];
 
   useEffect(() => {
     // Establish WebSocket connection
@@ -45,19 +59,43 @@ const WebSocketComponent = ({ data }) => {
   }, []);
 
   const handleRedButtonClick = () => {
+
     setShowRedCircle(false);
+    setCurrColor(0);
+
     setNewMessageCount(0); // Reset the counter when the button is clicked
   };
 
   console.log('showRedCircle in WebSocketComponent:', showRedCircle);
+
+
+  useEffect(() => {
+    let intervalId;
+
+    if (showRedCircle) {
+      // Start the interval when isRunning is true
+      intervalId = setInterval(() => {
+        // Update the parameter (counter) every 0.1 seconds
+        setCurrColor((prevCounter) => (prevCounter + 1) % colorArray.length);
+      }, 100);
+    }
+
+    // Clean up the interval when the component unmounts or when isRunning becomes false
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [showRedCircle]);
+
+
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
       <div style={{ position: 'relative' }}>
         {showRedCircle && (
           <button
-            className="red-circle-button"
+            // className="red-circle-button" 
             onClick={handleRedButtonClick}
-            style={{ top: '10px', right: '10px' }} // Adjust the top and right properties for spacing
+            style={{ width:'40px',hight:'40px',left:0,top: '10px', right: '10px',backgroundColor: colorArray[currColor],borderRadius:'50px' }} // Adjust the top and right properties for spacing
           >
             {newMessageCount}
           </button>

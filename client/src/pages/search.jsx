@@ -1,9 +1,9 @@
-import { Application, DatePicker } from 'react-rainbow-components';
-import EventPicker, {WordPicker} from '../components/EventPicker';
+import { DatePicker } from 'react-rainbow-components';
+import EventPicker from '../components/EventPicker';
 import TelescopePicker from '../components/TelescopePicker';
 import EsTable from '../components/EsTable';
 import Button from '@mui/material/Button';
-import {state, setState, useState} from 'react';
+import { useState} from 'react';
 import { useTheme } from "@mui/material";
 import { tokens } from "../theme";
 
@@ -13,10 +13,6 @@ import { tokens } from "../theme";
 const initialState = {
     range: undefined,
 };
-const containerStyles = {
-    maxWidth: 400,
-};
-
 
 
 const Search = () => {
@@ -87,7 +83,7 @@ const Search = () => {
                     variant='outlined'
                     style={{color:colors.grey[100], backgroundColor: colors.primary[300],marginTop:30, marginBottom: 20}}
                     onClick={ () =>{
-                        if(state.range != undefined){
+                        if(state.range !== undefined){
                             sentRequestES(
                                 new Date(state.range[0]).getTime(),
                                 new Date(state.range[1]).getTime(),
