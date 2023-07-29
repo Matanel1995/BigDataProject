@@ -5,13 +5,20 @@ const Distribution = () => {
 
   // Initialize an object to keep track of counts for each category
   const categoryCounts = {
-    "Meteors": 0,
-    "FireBalls": 0,
-    "Impactors(Astroids)": 0,
-    "Disasters(Astroids)": 0,
-    "Catastrophe(Astroids)": 0,
+    "Meteors": 5,
+    "FireBalls": 5,
+    "Impactors(Astroids)": 5,
+    "Disasters(Astroids)": 5,
+    "Catastrophe(Astroids)": 5,
   };
 
+  const [screenWidth, setScreenWidth] = useState(window.innerWidth);
+  const [screenHeight, setScreenHeight] = useState(window.innerHeight);
+
+  const handleResize = () => {
+    setScreenWidth(window.innerWidth);
+    setScreenHeight(window.innerHeight);
+  };
 
   const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8'];
 
@@ -31,29 +38,30 @@ const Distribution = () => {
     const fetchData = async () => {
       console.log(`http://localhost:4000/feed?start_date=${formattedStartDate}&end_date=${formattedEndDate}`)
       try {
-        const response = await fetch(`http://localhost:4000/feed?start_date=${formattedStartDate}&end_date=${formattedEndDate}`);
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        const data = await response.json();
+        // const response = await fetch(`http://localhost:4000/feed?start_date=${formattedStartDate}&end_date=${formattedEndDate}`);
+        // if (!response.ok) {
+        //   throw new Error('Network response was not ok');
+        // }
+        // const data = await response.json();
         
-        // Get an array of near_earth_objects
-        const nearEarthObjectsArray = Object.values(data.near_earth_objects);
-        console.log(nearEarthObjectsArray);
+        // // Get an array of near_earth_objects
+        // const nearEarthObjectsArray = Object.values(data.near_earth_objects);
+        // console.log(nearEarthObjectsArray);
 
-        // Use map() to extract the "estimated_diameter_max" for each date
-        const estimatedDiameterMaxMap = nearEarthObjectsArray.map(objects => {
-          return objects.map(obj => obj.estimated_diameter.meters.estimated_diameter_max);
-        });
+        // // Use map() to extract the "estimated_diameter_max" for each date
+        // const estimatedDiameterMaxMap = nearEarthObjectsArray.map(objects => {
+        //   return objects.map(obj => obj.estimated_diameter.meters.estimated_diameter_max);
+        // });
 
-        const estimatedDiameterMaxArray = estimatedDiameterMaxMap.flat();
+        // const estimatedDiameterMaxArray = estimatedDiameterMaxMap.flat();
 
-        estimatedDiameterMaxArray.forEach((estimatedDiameterMax) => {
-          const category = getCategory(estimatedDiameterMax);
-          categoryCounts[category] += 1;
-        });
+        // estimatedDiameterMaxArray.forEach((estimatedDiameterMax) => {
+        //   const category = getCategory(estimatedDiameterMax);
+        //   categoryCounts[category] += 1;
+        // });
         console.log(categoryCounts);
         setConvertToChartData(Object.entries(categoryCounts).map(([name, value]) => ({ name, value })));
+        console.log(convertToChartData);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -62,13 +70,13 @@ const Distribution = () => {
   }, []);
   //Add here chart to return
   return (
-    <div className='test'>
-      <PieChart width={300} height={300}>
+    <div className='test' style={{}}>
+      <PieChart width={screenWidth/4.5} height={screenHeight/4}>
         <Pie
           data={convertToChartData}
           dataKey= "value"
           nameKey="name"
-          cx="50%"
+          cx="75%"
           cy="50%"
           outerRadius={50}
           fill="#8884d8"

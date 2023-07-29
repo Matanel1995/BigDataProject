@@ -46,7 +46,7 @@ const NeoTable = () => {
           }}>
             <TableCell align="left">id</TableCell>
             <TableCell align="left">Designation</TableCell>
-            <TableCell align="left">Orbit ID</TableCell>
+            <TableCell align="left">Date</TableCell>
             <TableCell align="left">Close-approach</TableCell>
             <TableCell align="left">Distance (AU)</TableCell>
             <TableCell align="left">Minimum approach distance (AU)</TableCell>

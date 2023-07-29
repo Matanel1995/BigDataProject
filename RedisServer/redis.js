@@ -47,7 +47,7 @@ app.listen(port, () => {
 // var str = fs.readFileSync(jsonFilePath);
 // var jstr = JSON.parse(str);
 // console.log(jstr.length)
-// for( let i =0; i<100;i++){
+// for( let i =0; i<jstr.length ;i++){
 //   const new_Star = new BrightStar(jstr[i]['harvard_ref_#'],jstr[i].RA,jstr[i].DEC,jstr[i]['RA PM'],jstr[i]['DEC PM'],jstr[i].MAG,jstr[i]['Title HD']);
 //   const key = new_Star.RA+","+new_Star.DEC
 //   const value = {harvard_ref:new_Star.harvard_ref,
@@ -59,9 +59,9 @@ app.listen(port, () => {
 //                 TITLE: new_Star.Title_HD};
 // setRedis(key,JSON.stringify(value));
 // console.log(key,value)
-//}
-// // console.log("test");
+// }
+// console.log("test");
 // getRedis('2023-05-20 2023-05-21').then((data)=>{console.log(JSON.stringify(data.result))});
-// // setRedis('test','s');
+// setRedis('test','s');
 // const a = process.env.REDIS_AUTH
 // console.log(a)

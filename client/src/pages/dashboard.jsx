@@ -1,5 +1,6 @@
 // src/components/HomePage.js
 import React, { useEffect, useState } from 'react';
+import Button from '@mui/material/Button';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, PieChart, Pie, Cell } from 'recharts';
 import { Link } from 'react-router-dom';
 import { useTheme, Box } from "@mui/material";
@@ -19,7 +20,7 @@ const HomePage = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const [lastDoc, SetLastDoc] = useState();
-   // Sample data for the histogram chart
+  // Sample data for the histogram chart
 
   useEffect(() => {
     const fetchDoc = async () => {
@@ -40,7 +41,7 @@ const HomePage = () => {
     fetchDoc();
   }, []);
 
-    
+
 
   // Sample data for the histogram chart
   const [sumsByUrgency, setSumsByUrgency] = useState([]);
@@ -70,19 +71,19 @@ const HomePage = () => {
     const fetchDoc = async () => {
       try {
         const response = await fetch(`http://localhost:8000/getLastEvent`);
-  
+
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
-  
+
         const data = await response.json();
-        console.log(data.lastdoc,'ssssssssssssssssssssssssssssssssssssssssssss')
+        console.log(data.lastdoc, 'ssssssssssssssssssssssssssssssssssssssssssss')
         SetLastDoc(data.lastdoc);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
     };
-  
+
     fetchDoc();
   }, []);
 
@@ -126,53 +127,72 @@ const HomePage = () => {
           </div>
         </div>
       </Box>
-      <div style={{ width: '80%', margin: '0 auto', display: 'flex' }}>
-        <div style={{ backgroundColor: colors.primary[400], padding: '20px', margin: '20px', borderRadius: 20 }}>
-          <WebSocketComponent data={lastDoc}/>
-        </div>
-        <div style={{ backgroundColor: colors.primary[400], padding: '20px', margin: '20px', borderRadius: 20 }}>
-          <div style={{ display: 'flex', justifyContent: 'center' }}>
-          <MyButton buttonMessage='Click For Last Day Event Dashboard' link="/cards" ></MyButton>
+      {/* ROW 2*/}
+      <Box sx={{ borderRadius: '16px', width: '98%' }}
+        display="flex"
+        alignItems="top"
+        paddingTop="25px"
+        paddingLeft="25px"
+        height={"50vh"}
+      >
+        <div style={{ width: '80%', display: 'flex', flex: 1 }}>
+          <div style={{ backgroundColor: colors.primary[400], padding: '20px', margin: '20px', borderRadius: 20 }}>
+            <WebSocketComponent data={lastDoc} />
           </div>
-          <h2 style={{ color: colors.grey[100] }}>Distribution of events according to urgency level last week</h2>
-          <div style={{display:'flex', justifyContent :'center'}}>
-            <PieChart width={300} height={200}>
-              <Pie
-                data={sumsByUrgency}
-                dataKey="value"
-                nameKey="name"
-                cx="50%"
-                cy="50%"
-                outerRadius={50}
-                fill="#8884d8"
-                label
+          <div style={{ backgroundColor: colors.primary[400], padding: '20px', margin: '20px', borderRadius: 20 }}>
+            <h2 style={{ color: colors.grey[100], fontSize: 20 }}>Distribution of events according to urgency level past last week</h2>
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
+              <PieChart width={300} height={200}>
+                <Pie
+                  data={sumsByUrgency}
+                  dataKey="value"
+                  nameKey="name"
+                  cx="50%"
+                  cy="50%"
+                  outerRadius={50}
+                  fill="#8884d8"
+                  label
+                >
+                  {sumsByUrgency.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />))}
+                </Pie>
+                <Legend align="end" layout="vertical" verticalAlign="middle" />
+                <Tooltip />
+              </PieChart>
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
+              <Button
+                variant='outlined'
+                style={{ color: colors.grey[100], backgroundColor: colors.primary[500], marginTop: 30, marginBottom: 20 }}
+                href="/cards">
+                Click For Last Day Event Dashboard
+              </Button>
+            </div>
+          </div>
+          <div style={{ backgroundColor: colors.primary[400], padding: '20px', margin: '20px', borderRadius: 20 }}>
+            <h2 style={{ color: colors.grey[100], fontSize: 23 }}>Near Earth Object, distribution by size</h2>
+            <div className='neoDisterbution'>
+              <NeoDistribution /> 
+            </div>
+          </div>
+          <div style={{ backgroundColor: colors.primary[400], padding: '20px', margin: '20px', borderRadius: 20, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <h2 style={{ color: colors.grey[100], fontSize: 23 }}>Sun information</h2>
+            <div className='sunGif'>
+              {sunImageUrl && <img src={sunImageUrl} alt="Sun" style={{ marginTop: '20px', width: '200px', borderRadius: '50%' }} />}
+            </div>
+            <div className='sun button' style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              <Button
+                variant='outlined'
+                style={{ color: colors.grey[100], backgroundColor: colors.primary[500], marginTop: 30, marginBottom: 20 }}
+                href="/sunPage"
               >
-                {sumsByUrgency.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />))}
-              </Pie>
-              <Legend align="end" layout="vertical" verticalAlign="middle" />
-              <Tooltip />
-            </PieChart>
+                Click For Sun Dashboard
+              </Button>
+            </div>
           </div>
 
         </div>
-        <Box sx={{ borderRadius: '16px', width: '50%' }}
-          backgroundColor={colors.primary[400]}
-          display="flex"
-          alignItems="top"
-          margin="20px"
-          paddingTop="25px"
-          paddingLeft="25px"
-          height={"45vh"}
-        >
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <MyButton buttonMessage='Click For Sun Dashboard' link="/sunPage" ></MyButton>
-            {sunImageUrl && <img src={sunImageUrl} alt="Sun" style={{ marginTop: '80px', width: '200px', borderRadius: '50%' }} />}
-          </div>
-        </Box>
-        <PassedChart/>
-        <NeoDistribution/>
-      </div>
+      </Box>
     </div>
   );
 };
