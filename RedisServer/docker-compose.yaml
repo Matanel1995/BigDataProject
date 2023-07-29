@@ -1,0 +1,29 @@
+version: "3"
+services:
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data  # Define the named volume for Redis data persistence
+
+  node_app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "9000:9000"
+    depends_on:
+      - redis
+    environment:
+      - REDIS_URL=redis://redis:6379
+
+  redis_insight:
+    image: redislabs/redisinsight:latest
+    ports:
+      - "8001:8001"
+    depends_on:
+      - redis
+
+volumes:
+  redis_data:  # Define the named volume for Redis data persistence

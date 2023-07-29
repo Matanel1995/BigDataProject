@@ -61,10 +61,11 @@ app.post('/ElasticPart', async (req, res) => {
     let msg = req.body;
     const indexName = 'myindex5';
     const response = await createIndex(indexName, msg.key, msg.value);
-
+    const urgenctNum = JSON.parse(msg.value).urgency
+    console.log(urgenctNum)
     // Notify connected clients about the new message
     connectedClients.forEach((client) => {
-      if (client.readyState === WebSocket.OPEN) {
+      if (client.readyState === WebSocket.OPEN && urgenctNum>=3) {
         client.send(JSON.stringify({ type: 'newMessage' }));
       }
     });
