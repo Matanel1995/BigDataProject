@@ -131,7 +131,7 @@ const HomePage = () => {
       <Box sx={{ borderRadius: '16px', width: '98%' }}
         display="flex"
         alignItems="top"
-        paddingTop="25px"
+        paddingTop="10px"
         paddingLeft="25px"
         height={"50vh"}
       >
