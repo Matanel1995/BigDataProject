@@ -141,9 +141,9 @@ const COLORS = ['#0088FE', '#00C49F', '#FFBB28',
 <div style={{display:'flex',justifyContent: 'center', alignItems: 'center'}}>
   <h1>Last day event </h1>
 </div>
-    <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-around',margin:10}}>
+    <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-around',marginLeft:20}}>
       <div ref={divRef} style={{width:'100%',height:'100%',backgroundColor:colors.primary[400],borderRadius:20}}>
-        <h2 style={{paddingLeft:4}}>Events per hour</h2>
+        <h2 style={{paddingLeft:20}}>Events per hour</h2>
    
             <BarChart width={screenWidth/3} height={screenHeight/3} style={{marginRight:20}}  data={data}>
               <CartesianGrid strokeDasharray="3 3" />
@@ -157,14 +157,14 @@ const COLORS = ['#0088FE', '#00C49F', '#FFBB28',
             
       </div>  
       <div style={{width:'100%',height:'100%',backgroundColor:colors.primary[400],marginLeft:20,borderRadius:20,flexDirection:'row'}}>
-        <h2 style={{paddingLeft:4}}>Event detials</h2>
+        <h2 style={{paddingLeft:20}}>Event detials</h2>
          <Cards data={events} size={checkDivHeight()-87} />       
       </div>  
 
       </div>
-      <div style={{width:'100%',height:'100%',backgroundColor:colors.primary[400],borderRadius:20}}>
-      <h1>
- telescope location istribution</h1>
+      <div style={{width:'100%',height:'100%',backgroundColor:colors.primary[400],borderRadius:20,marginLeft:20}}>
+      <h1 style={{padding:20}}>
+ telescope location distribution</h1>
       {/* <ResponsiveContainer aspect={8} > */}
       <PieChart width={screenWidth/1.3} height={screenHeight/4} >
               <Pie
