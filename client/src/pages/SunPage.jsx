@@ -4,8 +4,10 @@ import SunTable from "../components/SunTable"
 const SunPage = () => {
     return (
         <div>
-            <SunTable></SunTable>
-            <div><ClosestApproach></ClosestApproach></div>
+            <SunTable/>
+            <div>
+                <ClosestApproach/>
+            </div>
         </div>
 
         // <ClosestApproach></ClosestApproach>
