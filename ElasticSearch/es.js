@@ -271,10 +271,6 @@ app.post('/ElasticPart', async (req, res) => {
   });
 
   async function d(start, end, event,telescopName){
-    // const end = Date.now() 
-    // const start = Date.now() - 24 * 7 * 60 * 60 * 1000;
-    console.log("IM HERE")
-    console.log(telescopName)
     const query = {
       index: 'myindex5',
       body: {
