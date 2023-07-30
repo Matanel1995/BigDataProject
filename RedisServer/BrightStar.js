@@ -1,5 +1,5 @@
 
-
+//Constructor for BrightStar Objcet
 class BrightStar{
 
     constructor(harvard_ref,RA,DEC,RA_PM,DEC_PM,MAG,Title_HD){

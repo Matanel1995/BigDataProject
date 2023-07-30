@@ -1,10 +1,6 @@
 const express = require('express');
-const SunCalc = require('suncalc');
-const axios = require('axios');
 const app = express();
-const cheerio = require('cheerio');
 const telescopeData = require('./public/telescopeData');
-console.log(telescopeData);
 
 async function sendToKafka(){
 const simulatedData = await generateSimulatedData();
@@ -28,7 +24,6 @@ async function calculateDecRA() {
   if(response.ok){
     const randKey = await response.text();
     const splited = randKey.split(',')
-    console.log(splited);
     const dec = splited[0];
     const ra = splited[1];
     return {
@@ -44,7 +39,6 @@ async function calculateDecRA() {
 }
 
 async function generateSimulatedData() {
-  const simulatedData = [];
   const events = ['GRB', 'Rise Brightness Apparent', 'Rise U', 'Rise Ray-X', 'Comet'];
   const levelsOfUrgency = [1, 2, 3, 4, 5];
 
@@ -54,9 +48,6 @@ async function generateSimulatedData() {
   
   const randomIndex = Math.floor(Math.random() * telescopeKeys.length);
   const randomKey = telescopeKeys[randomIndex];
-  console.log(randomKey,"keyyyyyyyyyyyyyy");
-  const randomValue = telescopeData[randomKey];
-  console.log(randomValue.LatLng,"valueeeeeeeeeee")
   const result = await calculateDecRA();
   // Generate simulated data 
     const data = {
@@ -66,7 +57,6 @@ async function generateSimulatedData() {
       event: events[Math.floor(Math.random() * events.length)],
       urgency: levelsOfUrgency[Math.floor(Math.random() * levelsOfUrgency.length)],
     };
-  console.log(data)
   return data;
 }
 
@@ -75,7 +65,3 @@ const port = 2000;
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
-
-
-const telescopeKeys = Object.keys(telescopeData);
-console.log(telescopeKeys)

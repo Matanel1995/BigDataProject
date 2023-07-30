@@ -2,9 +2,11 @@ const express = require('express');
 // const fetch = require('node-fetch');
 
 const app = express();
-const fs = require('fs');
-const jsonFilePath = './BSC.json';
-const BrightStar = require('./BrightStar');
+
+//Nedded when inserting the data to DB
+// const fs = require('fs');
+// const jsonFilePath = './BSC.json';
+// const BrightStar = require('./BrightStar');
 
 
 const  {Redis}  =  require("ioredis");
@@ -28,9 +30,7 @@ app.get('/',async (req,res)=>{
 
 
 async function setRedis(key, value){
-  console.log("IN SET REDIS FUNCTION");
   //Function to set data to redis
-
   const data = await client.set(key,value);
   console.log(data);
 }
@@ -42,6 +42,10 @@ app.listen(port, () => {
   console.log(`Redis Server is running on port ${port}`);
 });
 
+
+
+
+//Loop that store all the data in BSC.json into the DB 
 
 
 // var str = fs.readFileSync(jsonFilePath);
