@@ -1,6 +1,7 @@
 
 const kafkaSingelton = require('./kafkaConfig')
 
+
 const produceMsg = async (req,res)=>{
     let msg = req.body;
     console.log(msg)
