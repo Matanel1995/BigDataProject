@@ -4,7 +4,6 @@ const kafkaSingelton = require('./kafkaConfig')
 
 const produceMsg = async (req,res)=>{
     let msg = req.body;
-    console.log(msg)
     const producer = kafkaSingelton.kafka.producer();
     await producer.connect();
     const topic = 'telescopes';
@@ -18,7 +17,7 @@ const produceMsg = async (req,res)=>{
       topic,
       messages: [message],
     });
-  
+    res.send('success');
     await producer.disconnect();
 
 
