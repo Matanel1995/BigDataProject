@@ -42,7 +42,6 @@ async function createIndex(indexName, key, value) {
         value: value,
       }
     });
-    console.log('Document indexed successfully:', response);
   } catch (error) {
     console.error('Error indexing document:', error);
   }

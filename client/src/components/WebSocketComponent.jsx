@@ -2,10 +2,32 @@ import React, { useEffect, useState } from 'react';
 import Card from './Card';
 import './Card.css';
 
-const WebSocketComponent = ({ data }) => {
+const WebSocketComponent = ( ) => {
   const [showRedCircle, setShowRedCircle] = useState(false);
   const [newMessageCount, setNewMessageCount] = useState(0);
   const [currColor, setCurrColor] = useState(0);
+  const [lastDoc, SetLastDoc] = useState();
+
+  useEffect(() => {
+    
+    const fetchDoc = async () => {
+      try {
+        const response = await fetch(`http://localhost:8000/getLastEvent`);
+
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+
+        const data = await response.json();
+        SetLastDoc(data.lastdoc);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+       }
+    };
+  
+
+    fetchDoc();
+  }, [showRedCircle]);
 
   const colorArray = [
     '#FFFFCC',
@@ -62,7 +84,7 @@ const WebSocketComponent = ({ data }) => {
 
     setShowRedCircle(false);
     setCurrColor(0);
-
+    
     setNewMessageCount(0); // Reset the counter when the button is clicked
   };
 
@@ -100,7 +122,7 @@ const WebSocketComponent = ({ data }) => {
             {newMessageCount}
           </button>
         )}
-        <Card data={data} style={{ marginTop: '20px' }} /> {/* Add margin to create space between the button and the card */}
+        <Card data={lastDoc} style={{ marginTop: '20px' }} /> {/* Add margin to create space between the button and the card */}
       </div>
     </div>
   );
