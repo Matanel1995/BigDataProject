@@ -21,24 +21,7 @@ const HomePage = () => {
   const [lastDoc, SetLastDoc] = useState();
    // Sample data for the histogram chart
 
-  useEffect(() => {
-    const fetchDoc = async () => {
-      try {
-        const response = await fetch(`http://localhost:8000/getLastEvent`);
-
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-
-        const data = await response.json();
-        SetLastDoc(data.lastdoc);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
-
-    fetchDoc();
-  }, []);
+ 
 
     
 
@@ -66,25 +49,7 @@ const HomePage = () => {
     fetchData();
   }, []);
 
-  useEffect(() => {
-    const fetchDoc = async () => {
-      try {
-        const response = await fetch(`http://localhost:8000/getLastEvent`);
-  
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-  
-        const data = await response.json();
-        console.log(data.lastdoc,'ssssssssssssssssssssssssssssssssssssssssssss')
-        SetLastDoc(data.lastdoc);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
-  
-    fetchDoc();
-  }, []);
+ 
 
 
   const ballStyle = {

@@ -17,7 +17,7 @@ const produceMsg = async (req,res)=>{
       topic,
       messages: [message],
     });
-  
+    res.send('got it')
     await producer.disconnect();
 
 
