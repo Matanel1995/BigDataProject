@@ -22,24 +22,7 @@ const HomePage = () => {
   const [lastDoc, SetLastDoc] = useState();
   // Sample data for the histogram chart
 
-  useEffect(() => {
-    const fetchDoc = async () => {
-      try {
-        const response = await fetch(`http://localhost:8000/getLastEvent`);
-
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-
-        const data = await response.json();
-        SetLastDoc(data.lastdoc);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
-
-    fetchDoc();
-  }, []);
+ 
 
 
 
@@ -67,25 +50,7 @@ const HomePage = () => {
     fetchData();
   }, []);
 
-  useEffect(() => {
-    const fetchDoc = async () => {
-      try {
-        const response = await fetch(`http://localhost:8000/getLastEvent`);
-
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-
-        const data = await response.json();
-        console.log(data.lastdoc, 'ssssssssssssssssssssssssssssssssssssssssssss')
-        SetLastDoc(data.lastdoc);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
-
-    fetchDoc();
-  }, []);
+ 
 
 
   const ballStyle = {
@@ -99,10 +64,7 @@ const HomePage = () => {
   };
 
 
-
-
   const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8'];
-  console.log('dsassssssssssssssssssssssssssssssssssssssssssssssss', sumsByUrgency)
   return (
     <div style={{ flex: 1 }}>
       <div style={{ display: 'flex', justifyContent: 'center', alignContent: 'end', alignItems: 'center', margin: 20 }}>
@@ -137,7 +99,7 @@ const HomePage = () => {
       >
         <div style={{ width: '80%', display: 'flex', flex: 1 }}>
           <div style={{ backgroundColor: colors.primary[400], padding: '20px', margin: '20px', borderRadius: 20 }}>
-            <WebSocketComponent data={lastDoc} />
+            <WebSocketComponent/>
           </div>
           <div style={{ backgroundColor: colors.primary[400], padding: '20px', margin: '20px', borderRadius: 20 }}>
             <h2 style={{ color: colors.grey[100], fontSize: 20 }}>Distribution of events according to urgency level past last week</h2>
