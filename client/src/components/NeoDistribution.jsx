@@ -5,11 +5,11 @@ const Distribution = () => {
 
   // Initialize an object to keep track of counts for each category
   const categoryCounts = {
-    "Meteors": 5,
-    "FireBalls": 5,
-    "Impactors(Astroids)": 5,
-    "Disasters(Astroids)": 5,
-    "Catastrophe(Astroids)": 5,
+    "Meteors": 0,
+    "FireBalls": 0,
+    "Impactors(Astroids)": 0,
+    "Disasters(Astroids)": 0,
+    "Catastrophe(Astroids)": 0,
   };
 
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
@@ -38,27 +38,27 @@ const Distribution = () => {
     const fetchData = async () => {
       console.log(`http://localhost:4000/feed?start_date=${formattedStartDate}&end_date=${formattedEndDate}`)
       try {
-        // const response = await fetch(`http://localhost:4000/feed?start_date=${formattedStartDate}&end_date=${formattedEndDate}`);
-        // if (!response.ok) {
-        //   throw new Error('Network response was not ok');
-        // }
-        // const data = await response.json();
+        const response = await fetch(`http://localhost:4000/feed?start_date=${formattedStartDate}&end_date=${formattedEndDate}`);
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
         
-        // // Get an array of near_earth_objects
-        // const nearEarthObjectsArray = Object.values(data.near_earth_objects);
-        // console.log(nearEarthObjectsArray);
+        // Get an array of near_earth_objects
+        const nearEarthObjectsArray = Object.values(data.near_earth_objects);
+        console.log(nearEarthObjectsArray);
 
-        // // Use map() to extract the "estimated_diameter_max" for each date
-        // const estimatedDiameterMaxMap = nearEarthObjectsArray.map(objects => {
-        //   return objects.map(obj => obj.estimated_diameter.meters.estimated_diameter_max);
-        // });
+        // Use map() to extract the "estimated_diameter_max" for each date
+        const estimatedDiameterMaxMap = nearEarthObjectsArray.map(objects => {
+          return objects.map(obj => obj.estimated_diameter.meters.estimated_diameter_max);
+        });
 
-        // const estimatedDiameterMaxArray = estimatedDiameterMaxMap.flat();
+        const estimatedDiameterMaxArray = estimatedDiameterMaxMap.flat();
 
-        // estimatedDiameterMaxArray.forEach((estimatedDiameterMax) => {
-        //   const category = getCategory(estimatedDiameterMax);
-        //   categoryCounts[category] += 1;
-        // });
+        estimatedDiameterMaxArray.forEach((estimatedDiameterMax) => {
+          const category = getCategory(estimatedDiameterMax);
+          categoryCounts[category] += 1;
+        });
         console.log(categoryCounts);
         setConvertToChartData(Object.entries(categoryCounts).map(([name, value]) => ({ name, value })));
         console.log(convertToChartData);

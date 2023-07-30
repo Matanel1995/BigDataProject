@@ -7,6 +7,7 @@ const app = express();
 app.use(cors());
 const port = 10000;
 
+// Scrape The Sun 15 Days Ephemeris data
 async function scrapeSunInfo() {
   try {
     const url = 'https://theskylive.com/sun-info';
@@ -53,19 +54,15 @@ app.get('/getSunData', async (req, res) => {
   }
 });
 
+// Scrape The Closest Approach of The Sun to Earth data
 async function scrapeClosestApproach() {
   try {
     const url = 'https://theskylive.com/sun-info';
     const response = await axios.get(url);
     const $ = cheerio.load(response.data);
-
     const closestApproachData = {};
-
-    // Extract the description
     const descriptionElement = $('h1:contains("Closest Approach of The Sun to Earth")').next('p');
     const description = descriptionElement.text().trim();
-
-    // closestApproachData['Title'] = 'Closest Approach of The Sun to Earth';
     closestApproachData['Description'] = description;
 
     $('.keyinfobox').each((index, element) => {
@@ -84,11 +81,9 @@ async function scrapeClosestApproach() {
   }
 }
 
-
 app.get('/getClosestApproach', async (req, res) => {
   try {
       const closestApproachData = await scrapeClosestApproach();
-
       res.send({ closestApproachData });
   } catch (error) {
       console.error('Error:', error);
