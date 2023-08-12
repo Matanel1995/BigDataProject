@@ -72,13 +72,13 @@ Finally, navigate to the client directory and run 'npm start' to launch the clie
 By following these steps and configuring each component as instructed, you will have a fully operational platform to study and analyze bright stars, meteors, and the Sun using advanced data technologies. The seamless integration of Kafka, Redis, Elastic Search, Node.js, React, and web scraping ensures an efficient, real-time, and interactive experience for researchers and enthusiasts alike.
 
 ## DashBoard
-![DashBoard](https://github.com/Matanel1995/BigDataProject/assets/92520981/27730686-d849-4701-970e-ffd168c9d458)
+![DashBoard](https://github.com/Matanel1995/BigDataProject/assets/92520981/2fae0494-19b7-4468-a02b-d329d9945582)
 ### Also in light mode (available for the whole dashboard)
 ![DashBoardLightMode](https://github.com/Matanel1995/BigDataProject/assets/92520981/4c08692d-abc2-49f9-b4e1-f38660e89f49)
 
 ## Search
-![SearchPage](https://github.com/Matanel1995/BigDataProject/assets/92520981/c72be51d-3edf-49b2-8acc-7de8f2a2c848)
+![SearchPage](https://github.com/Matanel1995/BigDataProject/assets/92520981/fc9efcd6-385c-45bb-a7c0-8ce87e7536ce)
 
 ## Other pages
-![LastDayEvent](https://github.com/Matanel1995/BigDataProject/assets/92520981/a01bda9d-a98a-4b7b-996c-9ba120e7f71b)
-![SunDetails](https://github.com/Matanel1995/BigDataProject/assets/92520981/246196b3-f6a3-44f9-83c1-a8a816723e4d)
+![LastDayEvent](https://github.com/Matanel1995/BigDataProject/assets/92520981/7b07c6ac-4b12-4d6f-b836-77b87d4a3773)
+![SunDetails](https://github.com/Matanel1995/BigDataProject/assets/92520981/160045ff-5847-4f62-9f25-8376d608f565)
